@@ -1,0 +1,225 @@
+@charset "UTF-8";
+
+body {
+    font-family: "游ゴシック体", YuGothic, "游ゴシック", "Yu Gothic", sans-serif;
+}
+
+.container-fluid {
+    margin: 0 auto;
+    max-width: 960px;
+}
+
+#reserve-cancel {
+    cursor: pointer;
+    color: #0d6efd;
+    text-decoration: underline;
+}
+
+h1, h2 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+p {
+    margin-bottom: 0.3rem;
+}
+
+.bg-light-admin {
+    background-color: #dcdcdc;
+}
+
+.table-condensed td[scope="col"] {
+    word-break: keep-all;
+}
+
+.table-condensed td {
+    padding-bottom: 1rem;
+    max-width: 150px;
+    word-break: break-all;
+}
+
+.table-condensed th.detail-head {
+    width: 200px;
+}
+
+.news-file-clear {
+    border: 1px solid #ced4da;
+}
+
+.confirm-btn {
+    display: block;
+    margin: 50px auto 0px;
+}
+
+.form-control.is-invalid{
+    background-image:none;
+}
+
+/* PHPで動的に制御 */
+.error-msg {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: .875em;
+    color: #dc3545;
+}
+
+/* CKEditorのテキストエリアのスタイル */
+#cke_detail-text {
+    border-radius: 0.25rem;
+    border-color: #ced4da;
+}
+
+#cke_detail-text.error {
+    border-color: #dc3545;
+}
+
+.img-box {
+    max-width: 250px;
+}
+
+/* .table-wrap {
+    min-height: 540px;
+} */
+
+.table-wrap.reserv-case {
+    max-width: 400px;
+}
+
+a.pdf-link {
+    word-break: break-all;
+}
+
+.text-bd {
+    padding: 1rem;
+    border: solid #dee2e6;
+    border-width: thin;
+    border-radius: 0.25rem;
+}
+
+.t-status {
+    max-width: 180px;
+    margin: 0 0 0 auto;
+}
+
+.t-status button {
+    width: 66px;
+}
+
+.t-content {
+    border: none;
+    min-height: 200px;
+}
+
+.t-list-search {
+    max-width: 500px;
+    margin: 0 0 0 auto;
+}
+
+.created-updated {
+    text-align: right;
+}
+
+.created-updated ul{
+	display: inline-block;
+	text-align: left;
+    list-style: none;
+}
+
+.comments {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.comment-wrapper, .comment-add-wrapper {
+    max-width: 860px;
+}
+
+.comment-add-wrapper {
+    margin-top: 30px;
+}
+
+.t-del-btn {
+    max-width: 860px;
+}
+
+.comment-wrapper {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.border-none {
+    border: none;
+}
+
+.comment-wrapper .form-control[readonly] {
+    border: none;
+    background-color: #ffff;
+    resize: none;
+}
+
+.comment-wrapper .form-control:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.comment-wrapper .form-control {
+    border-radius: 0;
+}
+
+.user-menu-end[data-bs-popper] {
+    left: auto;
+}
+
+.t-content pre {
+    font-size: 1rem;
+}
+
+@media screen and (min-width: 640px) {
+    .entry-form .date-wrapper {
+        display: flex;
+    }
+
+    .entry-form .date-wrapper .start-date-wrapper,
+    .entry-form .date-wrapper .end-date-wrapper {
+        width: 25%;
+    }
+
+    .entry-form .date-wrapper .start-date-wrapper {
+        margin-right: 20px;
+    }
+
+    .entry-form .person-wrapper {
+        width: 50%;
+    }
+
+    .entry-form.user-create .person-wrapper {
+        margin: 0 auto;
+    }
+
+    /* override */
+    .alert-danger {
+        color: #842029;
+        background-color: #f8d7da;
+        border-color: #f5c2c7;
+        max-width: 50%;
+        margin: 0 auto 1rem;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .entry-form {
+        margin: 0 auto 100px;
+        /* width:50%; */
+    }
+
+    .rent-info {
+        margin: 50px auto 0px;
+        width:50%;
+    }
+    /* .entry-form.confirm {
+        margin: 0 auto;
+        width:80%;
+    } */
+}
