@@ -71,9 +71,12 @@
         </div>
         <div class="mb-4 member-list">
             @foreach($old_user_id as $id)
-            <div class="pb-1 member-name"><span><?= $users[$id]; ?></span>
+            @if (isset($users[$id]))
+            <div class="pb-1 member-name">
+                <span><?= $users[$id]; ?></span>
                 <input type="hidden" name="user_id[]" class="form-control" value="{{ $id }}"><a onclick="deleteMember(this)" class="ps-3" href="javascript:void(0)">削除</a>
             </div>
+            @endif
             @endforeach
         </div>
         <div class="d-flex justify-content-center complete-btn-grp pt-5 mb-5">

@@ -25,16 +25,17 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         $params = $this->route()->parameters();
-        
+
         return [
             'ticket_name' => 'required|string|max:100',
             't_responsible_person_id' => 'required|exists:users,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'content' => 'required|string|max:1000',
+            // TODO : 1と1aを区別する
             'user_id.*' => [
                 Rule::exists('project_user', 'user_id')->where(function ($query) use ($params) {
-                    $query->where('project_id', $params['id']);
+                    $query->where('project_id', $params['pid']);
                 })
             ]
         ];
