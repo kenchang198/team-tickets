@@ -27,7 +27,7 @@ class StoreRequest extends FormRequest
             'project_name' => 'required|string|max:100',
             'responsible_person_id' => 'required|exists:users,id',
             'user_id' => 'required|array',
-            'user_id.*' => 'exists:users,id',
+            'user_id.*' => 'exists_with_type:users,id',
         ];
     }
 
