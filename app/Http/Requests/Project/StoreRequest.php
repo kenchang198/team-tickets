@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Project;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\ExistsWithType;
 
 class StoreRequest extends FormRequest
 {
@@ -27,7 +28,7 @@ class StoreRequest extends FormRequest
             'project_name' => 'required|string|max:100',
             'responsible_person_id' => 'required|exists:users,id',
             'user_id' => 'required|array',
-            'user_id.*' => 'exists_with_type:users,id',
+            'user_id.*' => (new ExistsWithType('users', 'id')),
         ];
     }
 
