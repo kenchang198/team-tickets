@@ -19,10 +19,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::select('projects.id', 'project_name', 'users.name', 'users.del_flg AS user_del','status_code')
-        ->join('users', 'projects.responsible_person_id', '=', 'users.id')
-        ->get();
-
+        $projects = Project::all();
+        
         return view('index')->with('projects', $projects);
     }
 
@@ -78,80 +76,34 @@ class ProjectController extends Controller
      * プロジェクト詳細画面
      * チケットの一覧を表示する
      * @param \Illuminate\Http\Request $request
-     * @param  \App\Models\Project  $project
      * @param String $id
      * @return \Illuminate\Http\Response
      */
     public function detail(Request $request, $id)
     {
-        $project = Project::select(
-            'projects.id', 
-            'project_name', 
-            'projects.created_at AS created_at', 
-            'projects.created_user_id AS created_user_id', 
-            'projects.updated_at AS updated_at', 
-            'users.id as leader_id',
-            'users.name AS leader', 
-            'users.del_flg AS leader_del', 
-            'projects.status_code AS status'
-            )
-        ->join('users', 'projects.responsible_person_id', '=', 'users.id')
-        ->where('projects.id', $id)->first();
+        $project = Project::find($id);
         
         $this->authorize('view', $project);
-
-        $users = User::select('users.id AS id', 'users.name AS user_name', 'users.del_flg AS del_flg')
-        ->join('project_user', 'users.id', '=', 'project_user.user_id')
-        ->where('project_user.project_id', $id)
-        // ->where('users.del_flg', 0)
-        ->orderBy('users.id')->get();
-        
-        $create_user = User::select('users.name AS create_user')
-        ->join('projects', 'projects.created_user_id', '=', 'users.id')
-        ->where('projects.id', $id)->value('create_user');
-
-        $update_user = User::select('users.name AS create_user')
-        ->join('projects', 'projects.updated_user_id', '=', 'users.id')
-        ->where('projects.id', $id)->value('create_user');
-
-        $ticketsQ = Ticket::select(
-            'tickets.id', 
-            'ticket_name',
-            'tickets.responsible_person_id',
-            'users.name',
-            'statuses.status_name',
-            'start_date',
-            'end_date',
-            'users.del_flg'
-        )
-        ->where('project_id', $id)
-        ->join('users', 'tickets.responsible_person_id', '=', 'users.id')
-        ->join('statuses', 'tickets.status_code', '=', 'statuses.status_code')
-        ->orderBy('end_date', 'asc');
         
         $t_status = $request->input('t-status');
         
-        $ticketsQ->when(!empty($t_status) && $t_status !== "all" , function($q) use($t_status) {
-            return $q->where('statuses.status_code', $t_status);
-        });
-        
         $responsible = $request->input('responsible');
 
-        $ticketsQ->when(!empty($responsible) && $responsible !== "all" , function($q) use($responsible) {
-            return $q->where('tickets.responsible_person_id', $responsible);
-        });
+        $tickets = $project->tickets()
+            ->when(!empty($t_status) && $t_status !== "all" , function($q) use($t_status) {
+                return $q->where('status_code', $t_status);
+            })
+            ->when(!empty($responsible) && $responsible !== "all" , function($q) use($responsible) {
+                return $q->where('responsible_person_id', $responsible);
+            })
+            ->get();
 
-        $tickets = $ticketsQ->get();
-        
         $statuses = Status::select('status_code', 'status_name')
             ->pluck('status_name', 'status_code');
 
         return view('project.detail')
             ->with('project', $project)
             ->with('tickets', $tickets)
-            ->with('users', $users)
-            ->with('create_user', $create_user)
-            ->with('update_user', $update_user)
             ->with('statuses', $statuses);
     }
 

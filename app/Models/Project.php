@@ -20,15 +20,35 @@ class Project extends Model
         'status_code'
     ];
 
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'project_user');
+    }
+
+    public function responsiblePerson()
+    {
+        return $this->belongsTo(User::class, 'responsible_person_id');
+    }
+
+    public function createUser()
+    {
+        return $this->belongsTo(User::class, 'created_user_id');
+    }
+
+    public function updateUser()
+    {
+        return $this->belongsTo(User::class, 'updated_user_id');
     }
 
     public function hasPolicy()
     {
         return Auth::user()->admin 
-            || $this->leader_id === Auth::user()->id
+            || $this->responsiblePerson->id === Auth::user()->id
             || $this->created_user_id === Auth::user()->id;
     }
 }

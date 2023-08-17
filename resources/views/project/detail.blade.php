@@ -12,27 +12,27 @@
         
         <div class="created-updated">
             <ul>
-                <li>作成日 : {{ \Carbon\Carbon::parse($project->created_at)->format('Y/m/d') }}　{{ $create_user }}</li>
-                <li class="pt-1">更新日 : {{ \Carbon\Carbon::parse($project->updated_at)->format('Y/m/d') }}　{{ $update_user }}</li>
+                <li>作成日 : {{ \Carbon\Carbon::parse($project->created_at)->format('Y/m/d') }}　{{ $project->createUser->name }}</li>
+                <li class="pt-1">更新日 : {{ \Carbon\Carbon::parse($project->updated_at)->format('Y/m/d') }}　{{ $project->updateUser->name }}</li>
             </ul>
         </div>
 
         <p class="mb-3">
-            @if(!$project->leader_del)
-            <b>責任者: {{ $project->leader }}</b>
+            @if(!$project->responsiblePerson->del_flg)
+            <b>責任者: {{ $project->responsiblePerson->name }}</b>
             @else
-            <b class="text-decoration-line-through">責任者: {{ $project->leader }}</b>
+            <b class="text-decoration-line-through">責任者: {{ $project->responsiblePerson->name }}</b>
             @endif
         </p>
 
         <div class="mb-3">
             <p>メンバー</p>
             <ul>
-                @foreach($users as $user)
+                @foreach($project->users as $user)
                 @if(!$user->del_flg)
                 <li>
-                    {{ $user->user_name }}
-                    @if($user->id === $project->leader_id)
+                    {{ $user->name }}
+                    @if($user->id === $project->responsible_person_id)
                     <span>（責任者）</span>
                     @endif
                 </li>
@@ -94,11 +94,11 @@
                     <td class="ps-2">{{ \Carbon\Carbon::parse($ticket->start_date)->format('Y/m/d') }}</td>
                     <td class="ps-2">{{ \Carbon\Carbon::parse($ticket->end_date)->format('Y/m/d') }}</td>
                     @if ($ticket->del_flg) 
-                    <td class="ps-2 text-decoration-line-through">{{ $ticket->name }}</td>
+                    <td class="ps-2 text-decoration-line-through">{{ $ticket->responsiblePerson->name }}</td>
                     @else
-                    <td class="ps-2">{{ $ticket->name }}</td>
+                    <td class="ps-2">{{ $ticket->responsiblePerson->name }}</td>
                     @endif
-                    <td class="ps-2">{{ $ticket->status_name }}</td>
+                    <td class="ps-2">{{ $statuses[$ticket->status_code] }}</td>
                 </tr>
                 @endforeach
             </tbody>
