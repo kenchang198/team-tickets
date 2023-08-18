@@ -20,7 +20,7 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::all();
-        
+
         return view('index')->with('projects', $projects);
     }
 
@@ -46,29 +46,7 @@ class ProjectController extends Controller
         $data = $request->validated();
 
         $project = new Project();
-        $project->project_name = $data['project_name'];
-        $project->responsible_person_id = $data['responsible_person_id'];
-        
-        $project->created_at = date('Y-m-d H:i:s');
-        $project->updated_at = date('Y-m-d H:i:s');
-        
-        $project->created_user_id = Auth::user()->id;
-        $project->updated_user_id = Auth::user()->id;
-
-        $project->save();
-
-        // メンバーの関連付け
-        if (isset($data['user_id'])) {
-            $project->users()->attach($data['user_id']);
-        }
-    
-        // プロジェクトの責任者がプロジェクトメンバーに含まれていない場合は追加する
-        if (!in_array($data['responsible_person_id'], $data['user_id'], true)) {
-            $project->users()->attach($data['responsible_person_id']);
-        }
-
-        // 保存が完了したらリダイレクトなどの適切なレスポンスを返す
-        // 例: リダイレクト先のルート名は適宜変更してください
+        $project->__create($data);
         return redirect()->route('projects.index')->with('success', 'プロジェクトが保存されました');
     }
 

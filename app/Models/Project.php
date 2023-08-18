@@ -17,7 +17,9 @@ class Project extends Model
         'responsible_person_id',
         'start_date',
         'end_date',
-        'status_code'
+        'status_code',
+        'created_user_id',
+        'updated_user_id'
     ];
 
     public function tickets()
@@ -50,5 +52,27 @@ class Project extends Model
         return Auth::user()->admin 
             || $this->responsiblePerson->id === Auth::user()->id
             || $this->created_user_id === Auth::user()->id;
+    }
+
+    public function __create(array $data)
+    {
+        $project = $this->create([
+            'project_name' => $data['project_name'],
+            'responsible_person_id' => $data['responsible_person_id'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+            'created_user_id' => Auth::user()->id,
+            'updated_user_id' => Auth::user()->id,
+        ]);
+
+        // メンバーの関連付け
+        if (isset($data['user_id'])) {
+            $project->users()->attach($data['user_id']);
+        }
+
+        // プロジェクトの責任者がプロジェクトメンバーに含まれていない場合は追加する
+        if (!in_array($data['responsible_person_id'], $data['user_id'], true)) {
+            $project->users()->attach($data['responsible_person_id']);
+        }
     }
 }
