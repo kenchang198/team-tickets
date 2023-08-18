@@ -4,7 +4,7 @@
     <nav class="my-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">TOP</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('project.detail', ['id' => $project->id]) }}">{{ $project->project_name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('project.detail', $project) }}">{{ $project->project_name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ $ticket->ticket_name }}</li>
         </ol>
     </nav>
@@ -117,7 +117,7 @@
     </div>
     @endif
     <div class="mt-5 mb-5">
-        <a class="btn btn-secondary px-3" href="{{ route('project.detail', ['id' => $project->id]) }}">戻る</a>
+        <a class="btn btn-secondary px-3" href="{{ route('project.detail', $project) }}">戻る</a>
     </div>
 </div>
 

@@ -12,15 +12,15 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/project/create', [ProjectController::class, 'create'])->name('project.create');
     Route::post('/project/store', [ProjectController::class, 'store'])->name('project.store');
-    Route::get('/project/{id}/edit', [ProjectController::class, 'edit'])->name('project.edit');
-    Route::put('/project/{id}/edit', [ProjectController::class, 'update'])->name('project.edit.put');
-    Route::delete('/project/{id}/delete', [ProjectController::class, 'delete'])->name('project.delete');
+    Route::get('/project/{project}/edit', [ProjectController::class, 'edit'])->name('project.edit');
+    Route::put('/project/{project}/edit', [ProjectController::class, 'update'])->name('project.edit.put');
+    Route::delete('/project/{project}/delete', [ProjectController::class, 'delete'])->name('project.delete');
 });
 
 // プロジェクト詳細　(チケット一覧)
 Route::prefix('/project')->middleware('auth')->group(function () {
-    Route::get('/{id}', [ProjectController::class, 'detail'])->name('project.detail');
-    Route::put('/{id}/status', [ProjectController::class, 'status'])->name('project.status');
+    Route::get('/{project}', [ProjectController::class, 'detail'])->name('project.detail');
+    Route::put('/{project}/status', [ProjectController::class, 'status'])->name('project.status');
 });
 
 // チケット作成、詳細、コメント投稿
