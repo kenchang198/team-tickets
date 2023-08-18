@@ -4,7 +4,7 @@
     <nav class="my-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">TOP</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('project.detail', ['id' => $project->id]) }}">{{ $project->project_name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('project.detail', $project) }}">{{ $project->project_name }}</a></li>
             <li class="breadcrumb-item"><a href="{{ route('ticket.show', ['pid' => $project->id, 'tid' => $ticket->id]) }}">{{ $ticket->ticket_name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">編集</li>
         </ol>
