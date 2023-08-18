@@ -49,7 +49,7 @@
             <div class="mb-1">
                 @if (!empty(old('user_id')) && in_array($user->id, old('user_id')))
                 <?php $checked = 'checked'; ?>
-                @elseif ( empty(old('user_id')) && !empty($p_users) && $p_users->contains($user->id))
+                @elseif ( empty(old('user_id')) && !empty($project->users) && $project->users->contains($user->id))
                 <?php $checked = 'checked'; ?>
                 @else
                 <?php $checked = ''; ?>

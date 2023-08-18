@@ -93,28 +93,15 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        $project = Project::select(
-                'projects.id', 
-                'project_name', 
-                'projects.created_at AS created_at', 
-                'projects.created_user_id AS created_user_id', 
-                'projects.updated_at AS updated_at', 
-                'projects.responsible_person_id'
-            )
-        ->where('projects.id', $id)->first();
+        $project = Project::find($id);
         
         $this->authorize('update', $project);
 
         $users = User::where('del_flg', 0)->orderBy('id')->get();
-
-        $p_users = User::select('users.id AS id', 'users.name AS user_name')
-        ->join('project_user', 'users.id', '=', 'project_user.user_id')
-        ->where('project_user.project_id', $id)->orderBy('users.id')->get();
         
         return view('project.edit')
-            ->with('project', $project)
-            ->with('users', $users)
-            ->with('p_users', $p_users);
+                ->with('project', $project)
+                ->with('users', $users);
     }
 
     /**
@@ -130,29 +117,8 @@ class ProjectController extends Controller
         $project = Project::where('id', $request->id())->first();
         
         $this->authorize('update', $project);
-
-        $project->project_name = $data['project_name'];
-        $project->responsible_person_id = $data['responsible_person_id'];
-
-        $project->created_at = date('Y-m-d H:i:s');
-        $project->updated_at = date('Y-m-d H:i:s');
-
-        $project->updated_user_id = Auth::user()->id;
-
-        $project->save();
-
-        // プロジェクトメンバーを初期化
-        $project->users()->detach();
-
-        // メンバーの関連付け
-        if (isset($data['user_id'])) {
-            $project->users()->attach($data['user_id']);
-        }
-
-        // プロジェクトの責任者がプロジェクトメンバーに含まれていない場合は追加する
-        if (!in_array($data['responsible_person_id'], $data['user_id'], true)) {
-            $project->users()->attach($data['responsible_person_id']);
-        }
+        
+        $project->__update($data);
 
         return redirect()->route('project.detail', ['id' => $project->id]);
     }

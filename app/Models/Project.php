@@ -75,4 +75,28 @@ class Project extends Model
             $project->users()->attach($data['responsible_person_id']);
         }
     }
+
+    public function __update(array $data)
+    {
+        $this->project_name = $data['project_name'];
+        $this->responsible_person_id = $data['responsible_person_id'];
+
+        $this->updated_at = date('Y-m-d H:i:s');
+        $this->updated_user_id = Auth::user()->id;
+
+        $this->save();
+
+        // プロジェクトメンバーを初期化
+        $this->users()->detach();
+
+        // メンバーの関連付け
+        if (isset($data['user_id'])) {
+            $this->users()->attach($data['user_id']);
+        }
+
+        // プロジェクトの責任者がプロジェクトメンバーに含まれていない場合は追加する
+        if (!in_array($data['responsible_person_id'], $data['user_id'], true)) {
+            $this->users()->attach($data['responsible_person_id']);
+        }
+    }
 }
