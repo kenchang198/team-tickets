@@ -15,7 +15,7 @@
             @foreach($projects as $project)
             <tr class="pb-3">
                 <td class="ps-3">
-                    <a href="{{ route('project.detail', ['id' => $project->id]) }}">{{ $project->project_name }}</a>
+                    <a href="{{ route('project.detail', $project) }}">{{ $project->project_name }}</a>
                 </td>
                 <td class="ps-2 @if($project->responsiblePerson->del_flg)text-decoration-line-through @endif">{{ $project->responsiblePerson->name }}</td>
                 <td class="ps-2">@if ($project->status_code === 'active')進行中@else終了@endif</td>

@@ -54,13 +54,11 @@ class ProjectController extends Controller
      * プロジェクト詳細画面
      * チケットの一覧を表示する
      * @param \Illuminate\Http\Request $request
-     * @param String $id
+     * @param \App\Models\Project $project
      * @return \Illuminate\Http\Response
      */
-    public function detail(Request $request, $id)
+    public function detail(Request $request, Project $project)
     {
-        $project = Project::find($id);
-        
         $this->authorize('view', $project);
         
         $t_status = $request->input('t-status');
@@ -88,13 +86,11 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Project  $project
+     * @param  \App\Models\Project $project
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Project $project)
     {
-        $project = Project::find($id);
-        
         $this->authorize('update', $project);
 
         $users = User::where('del_flg', 0)->orderBy('id')->get();
@@ -108,19 +104,18 @@ class ProjectController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\Project\StoreRequest
+     * @param  \App\Models\Project $project
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreRequest $request)
+    public function update(StoreRequest $request, Project $project)
     {
-        $data = $request->validated();
-        
-        $project = Project::where('id', $request->id())->first();
-        
         $this->authorize('update', $project);
+
+        $data = $request->validated();
         
         $project->__update($data);
 
-        return redirect()->route('project.detail', ['id' => $project->id]);
+        return redirect()->route('project.detail', $project);
     }
 
     /**
@@ -129,10 +124,8 @@ class ProjectController extends Controller
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function status(Request $request, $id)
+    public function status(Request $request, Project $project)
     {
-        $project = Project::where('id', $id)->first();
-        
         $this->authorize('status', $project);
 
         if ($request->input('p-status') != '') {
@@ -144,7 +137,7 @@ class ProjectController extends Controller
         if ($project->status_code == 'done') {
             return redirect()->route('projects.index');
         }
-        return redirect()->route('project.detail', ['id' => $id]);
+        return redirect()->route('project.detail', $project);
     }
 
     /**
@@ -153,10 +146,8 @@ class ProjectController extends Controller
      * @param  \App\Http\Requests\Project\StoreRequest
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function delete(Project $project)
     {
-        $project = Project::find($id);
-        
         $this->authorize('delete', $project);
 
         $project->users()->detach();

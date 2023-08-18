@@ -42,7 +42,7 @@
         </div>
         @if ($project->hasPolicy())
         <div class="text-end mb-5">
-            <a href="{{ route('project.edit', ['id' => $project->id]) }}">編集</a>
+            <a href="{{ route('project.edit', $project) }}">編集</a>
         </div>
         @endif
         <form action="{{ request()->fullUrl() }}" class="t-list-search mb-4">
@@ -109,10 +109,10 @@
     </div>
     @if ($project->hasPolicy())
     <div class="d-flex justify-content-end mb-5">
-        <form class="ps-2" action="{{ route('project.status', ['id' => $project->id]) }}" method="post">
+        <form class="ps-2" action="{{ route('project.status', $project) }}" method="post">
             @csrf
             @method('put')
-            @if ($project->status == 'active')
+            @if ($project->status_code == 'active')
             <button class="btn btn-secondary px-3">終了</button>
             <input type="hidden" name="p-status" value="0">
             @else
@@ -120,7 +120,7 @@
             <input type="hidden" name="p-status" value="1">
             @endif
         </form>
-        <form class="ps-2" action="{{ route('project.delete', ['id' => $project->id]) }}" method="post">
+        <form class="ps-2" action="{{ route('project.delete', $project) }}" method="post">
             @csrf
             @method('delete')
             <button type="submit" class="btn btn-danger px-3">削除</button>

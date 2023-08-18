@@ -17,6 +17,11 @@ class Ticket extends Model
     {
         return $this->belongsToMany(User::class);
     }
+    
+    public function responsiblePerson()
+    {
+        return $this->belongsTo(User::class, 'responsible_person_id');
+    }
 
     public function hasUpdatePolicy()
     {
