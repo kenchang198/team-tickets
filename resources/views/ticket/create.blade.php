@@ -4,7 +4,7 @@
     <nav class="my-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">TOP</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('project.detail', ['id' => $project->id]) }}">{{ $project->project_name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('project.detail', $project) }}">{{ $project->project_name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">新規チケット</li>
         </ol>
     </nav>
@@ -80,7 +80,7 @@
             @endforeach
         </div>
         <div class="d-flex justify-content-center complete-btn-grp pt-5 mb-5">
-            <div><a class="text-light btn btn-secondary me-3" href="/project/{{ $project->id }}"><b>戻る</b></a></div>
+            <div><a class="text-light btn btn-secondary me-3" href="{{ route('project.detail', $project) }}"><b>戻る</b></a></div>
             <button type="submit" class="btn btn-primary me-3"><b>保存</b></button>
         </div>
     </form>
