@@ -11,10 +11,10 @@
     <div class="table-wrap table-responsive pt-3">
 
         <h1 class="mb-3">{{ $ticket->ticket_name }}</h1>
-        @if (!$ticket->responsible_del)
-        <p class="mb-3"><b>担当: {{ $ticket->responsible_person }}</b></p>
+        @if (!$ticket->responsiblePerson->del_flg)
+        <p class="mb-3"><b>担当: {{ $ticket->responsiblePerson->name }}</b></p>
         @else
-        <p class="mb-3 text-decoration-line-through"><b>担当: {{ $ticket->responsible_person }}</b></p>
+        <p class="mb-3 text-decoration-line-through"><b>担当: {{ $ticket->responsiblePerson->name }}</b></p>
         @endif
         <div class="mb-5 created-updated">
             <ul>
@@ -22,7 +22,7 @@
                 <li class="pt-1">期日　: {{ $end_date_f }}</li>
             </ul>
         </div>
-        <form action="{{ route('ticket.status', ['pid' => $project->id, 'tid' => $ticket->id]) }}" class="t-status mb-4" method="post">
+        <form action="{{ route('ticket.status', [$project, $ticket]) }}" class="t-status mb-4" method="post">
             @csrf
             @method('put')
             <div class="d-flex justify-content-end">
@@ -41,28 +41,28 @@
         </div>
         @if ($ticket->hasUpdatePolicy())
         <div class="text-end">
-            <a href="{{ route('ticket.edit', ['pid' => $project->id, 'tid' => $ticket->id]) }}">編集</a>
+            <a href="{{ route('ticket.edit', [$project, $ticket]) }}">編集</a>
         </div>
         @endif
         <div class="ps-3 text-black-50">
-            <p>作成日: {{ $created_at }}　{{ $create_user }}</p>
-            <p >更新日: {{ $updated_at }}　{{ $update_user }}</p>
+            <p>作成日: {{ $created_at }}　{{ $ticket->createUser->name }}</p>
+            <p >更新日: {{ $updated_at }}　{{ $ticket->updateUser->name }}</p>
         </div>
     </div>
     <div class="mt-5 comments">
         <p class="mb-3"><b>コメント</b></p>
-        @foreach ($comments as $comment)
+        @foreach ($ticket->comments as $comment)
         <form id="comment-{{$comment->id}}" action="{{ route('comment.update', $comment) }}" class="comment-wrapper mt-4 @if($loop->last) border-none @endif" method="post">
             @method('put')
             @csrf
             <p>
-                @if (!$comment->user_del)
-                <span>{{ $comment->name }}</span>
+                @if (!$comment->user->del_flg)
+                <span>{{ $comment->user->name }}</span>
                 @else
-                <span class="text-decoration-line-through">{{ $comment->name }}</span>
+                <span class="text-decoration-line-through">{{ $comment->user->name }}</span>
                 @endif
                 <span class="text-black-50 ps-3">{{ $comment->CreatedAt() }}</span>
-                @if ($comment->user_id == Auth::user()->id)
+                @if ($comment->user->id == Auth::user()->id)
                 <a class="del-btn-{{$comment->id}}" href="javascript:;" onclick="submitDelForm({{$comment->id}})">削除</a>
                 @endif
             </p>
@@ -81,7 +81,7 @@
         </form>
         @endforeach
         
-        <form class="comment-add-wrapper" action="" method="post">
+        <form class="comment-add-wrapper" action="{{ route('ticket.show', [$project, $ticket]) }}" method="post">
             <p>コメントを追加</p>
             @csrf
             @if ($errors->any())
@@ -102,14 +102,14 @@
     <div class="mb-5">
             <p>要確認 : </p>
             <ul>
-                @foreach($t_users as $id => $name)
-                <li>{{ $name }}</li>
+                @foreach($ticket->users as $user)
+                <li>{{ $user->name }}</li>
                 @endforeach
             </ul>
     </div>
     @if ($ticket->hasDeletePolicy())
     <div class="t-del-btn d-flex justify-content-end mb-5">
-        <form class="ps-2" action="{{ route('ticket.delete', ['pid' => $project->id, 'tid' => $ticket->id]) }}" method="post">
+        <form class="ps-2" action="{{ route('ticket.delete', [$project, $ticket]) }}" method="post">
             @csrf
             @method('delete')
             <button type="submit" class="btn btn-danger px-3">チケットを削除する</button>

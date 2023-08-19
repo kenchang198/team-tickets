@@ -24,7 +24,8 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
-        $params = $this->route()->parameters();
+        // Implicit Bindingで渡されたProjectモデル
+        $project = $this->route('project');
 
         return [
             'ticket_name' => 'required|string|max:100',
@@ -34,7 +35,7 @@ class StoreRequest extends FormRequest
             'content' => 'required|string|max:1000',
             'user_id.*' => [
                 (new ExistsWithType('project_user', 'user_id'))
-                    ->withCondition('project_id', '=', $params['pid'])
+                    ->withCondition('project_id', '=', $project->id)
             ],
         ];
     }

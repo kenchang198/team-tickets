@@ -9,7 +9,7 @@
         </ol>
     </nav>
 
-    <form enctype="multipart/form-data" class="mt-5 entry-form" action="{{ route('ticket.store', ['pid' => $project->id]) }}" method="POST">
+    <form enctype="multipart/form-data" class="mt-5 entry-form" action="{{ route('ticket.store', $project) }}" method="POST">
         @csrf
         @if ($errors->any())
         <div class="alert alert-danger">
@@ -30,9 +30,9 @@
             <div>
                 <select name="t_responsible_person_id" id="responsible" class="form-control">
                     <option value="">-</option>
-                    @foreach($users as $k => $v)
-                    <option value="{{ $k }}" {{ old('t_responsible_person_id') == $k ? 'selected' : '' }}>
-                        {{ $v }}
+                    @foreach($project->users as $user)
+                    <option value="{{ $user->id }}" {{ old('t_responsible_person_id') == $user->id ? 'selected' : '' }}>
+                        {{ $user->name }}
                     </option>
                     @endforeach
                 </select>
@@ -59,9 +59,8 @@
             <div>
                 <select id="member-select" class="form-control">
                     <option value="">-</option>
-                    @foreach($users as $k => $v)
-                    <option @if(in_array($k, $old_user_id)) style="display: none;" @endif value="{{ $k }}">{{ $v }}
-                    </option>
+                    @foreach($project->users as $user)
+                    <option @if(in_array($user->id, $old_user_id)) style="display: none;" @endif value="{{ $user->id }}">{{ $user->name }}</option>
                     @endforeach
                 </select>
                 <div class="mt-3">
@@ -71,12 +70,10 @@
         </div>
         <div class="mb-4 member-list">
             @foreach($old_user_id as $id)
-            @if (isset($users[$id]))
             <div class="pb-1 member-name">
-                <span><?= $users[$id]; ?></span>
+                <span>{{ $project->users->find($id)->name }}</span>
                 <input type="hidden" name="user_id[]" class="form-control" value="{{ $id }}"><a onclick="deleteMember(this)" class="ps-3" href="javascript:void(0)">削除</a>
             </div>
-            @endif
             @endforeach
         </div>
         <div class="d-flex justify-content-center complete-btn-grp pt-5 mb-5">

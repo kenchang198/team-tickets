@@ -89,7 +89,7 @@
                 @foreach($tickets as $ticket)
                 <tr class="pb-3">
                     <td class="ps-3">
-                        <a href="{{ route('ticket.show', ['pid' => $project->id, 'tid' => $ticket->id] ) }}">{{ $ticket->ticket_name }}</a>
+                        <a href="{{ route('ticket.show', [$project, $ticket] ) }}">{{ $ticket->ticket_name }}</a>
                     </td>
                     <td class="ps-2">{{ \Carbon\Carbon::parse($ticket->start_date)->format('Y/m/d') }}</td>
                     <td class="ps-2">{{ \Carbon\Carbon::parse($ticket->end_date)->format('Y/m/d') }}</td>
@@ -105,7 +105,7 @@
         </table>
     </div>
     <div>
-        <a class="btn btn-primary px-3" href="/{{ request()->path() }}/ticket/create">チケット作成</a>
+        <a class="btn btn-primary px-3" href="{{ route('ticket.create', $project) }}">チケット作成</a>
     </div>
     @if ($project->hasPolicy())
     <div class="d-flex justify-content-end mb-5">

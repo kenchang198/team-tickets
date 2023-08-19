@@ -23,6 +23,34 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'responsible_person_id');
     }
 
+    public function createUser()
+    {
+        return $this->belongsTo(User::class, 'created_user_id');
+    }
+
+    public function updateUser()
+    {
+        return $this->belongsTo(User::class, 'updated_user_id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function getUserIdsArray()
+    {
+        // 特定のTicketに関連するUserモデルを取得
+        $users = $this->users;
+
+        // Userモデルの情報を連想配列に変換
+        $userData = $users->map(function ($user) {
+            return $user->id;
+        });
+
+        return $userData->toArray();
+    }
+
     public function hasUpdatePolicy()
     {
         return Auth::user()->admin 

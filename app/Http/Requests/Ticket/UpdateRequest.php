@@ -4,7 +4,7 @@ namespace App\Http\Requests\Ticket;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-
+use App\Rules\ExistsWithType;
 class UpdateRequest extends FormRequest
 {
     /**
@@ -24,8 +24,9 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $params = $this->route()->parameters();
-        
+        // Implicit Bindingで渡されたProjectモデル
+        $project = $this->route('project');
+ 
         return [
             'ticket_name' => 'required|string|max:100',
             't_responsible_person_id' => 'required|exists:users,id',
@@ -33,10 +34,9 @@ class UpdateRequest extends FormRequest
             'end_date' => 'required|date',
             'content' => 'required|string|max:1000',
             'user_id.*' => [
-                Rule::exists('project_user', 'user_id')->where(function ($query) use ($params) {
-                    $query->where('project_id', $params['pid']);
-                })
-            ]
+                (new ExistsWithType('project_user', 'user_id'))
+                    ->withCondition('project_id', '=', $project->id)
+            ],
         ];
     }
 }

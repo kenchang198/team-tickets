@@ -5,12 +5,12 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">TOP</a></li>
             <li class="breadcrumb-item"><a href="{{ route('project.detail', $project) }}">{{ $project->project_name }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('ticket.show', ['pid' => $project->id, 'tid' => $ticket->id]) }}">{{ $ticket->ticket_name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('ticket.show', [$project, $ticket]) }}">{{ $ticket->ticket_name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">編集</li>
         </ol>
     </nav>
 
-    <form enctype="multipart/form-data" class="mt-5 entry-form" action="{{ route('ticket.edit.put', ['pid' => $project->id, 'tid' => $ticket->id]) }}" method="POST">
+    <form enctype="multipart/form-data" class="mt-5 entry-form" action="{{ route('ticket.edit.put', [$project, $ticket]) }}" method="POST">
         @csrf
         @method('PUT')
         @if ($errors->any())
@@ -32,15 +32,15 @@
             <div>
                 <select name="t_responsible_person_id" id="responsible" class="form-control">
                     <option value="">-</option>
-                    @foreach($users as $k => $v)
-                        @if (empty(old('t_responsible_person_id')) && $k == $ticket->responsible_person_id)
+                    @foreach($project->users as $user)
+                        @if (empty(old('t_responsible_person_id')) && $user->id == $ticket->responsiblePerson->id)
                         <?php $sel = 'selected'; ?>
-                        @elseif (old('t_responsible_person_id') && $k == old('t_responsible_person_id'))
+                        @elseif (old('t_responsible_person_id') && $user->id == old('t_responsible_person_id'))
                         <?php $sel = 'selected'; ?>
                         @else
                         <?php $sel = null; ?>
                         @endif
-                    <option value="{{ $k }}" <?= $sel ?? '' ?>>{{ $v }}</option>
+                    <option value="{{ $user->id }}" <?= $sel ?? '' ?>>{{ $user->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -66,9 +66,8 @@
             <div>
                 <select id="member-select" class="form-control">
                     <option value="">-</option>
-                    @foreach($users as $k => $v)
-                    <option @if(in_array($k, $old_user_id) || in_array($k, $t_user_keys)) style="display: none;" @endif value="{{ $k }}">{{ $v }}
-                    </option>
+                    @foreach($project->users as $user)
+                    <option @if(in_array($user->id, $old_user_id) || in_array($user->id, $ticket->getUserIdsArray())) style="display: none;" @endif value="{{ $user->id }}">{{ $user->name }}</option>
                     @endforeach
                 </select>
                 <div class="mt-3">
@@ -78,17 +77,19 @@
         </div>
         <div class="mb-4 member-list">
             @foreach($old_user_id as $id)
-            @if (isset($users[$id]))
-            <div class="pb-1 member-name"><span><?= $users[$id]; ?></span>
+            <div class="pb-1 member-name"><span>{{ $project->users->find($id)->name }}</span>
                 <input type="hidden" name="user_id[]" class="form-control" value="{{ $id }}"><a onclick="deleteMember(this)" class="ps-3" href="javascript:void(0)">削除</a>
             </div>
+            @endforeach
+            
+            {{-- 初期表示時 --}}
+            @if (!$errors->any() && !count($old_user_id))
+                @foreach($ticket->users as $user)
+                <div class="pb-1 member-name"><span>{{ $user->name }}</span>
+                    <input type="hidden" name="user_id[]" class="form-control" value="{{ $user->id }}"><a onclick="deleteMember(this)" class="ps-3" href="javascript:void(0)">削除</a>
+                </div>
+                @endforeach
             @endif
-            @endforeach
-            @foreach($t_users as $id => $name)
-            <div class="pb-1 member-name"><span>{{ $name }}</span>
-                <input type="hidden" name="user_id[]" class="form-control" value="{{ $id }}"><a onclick="deleteMember(this)" class="ps-3" href="javascript:void(0)">削除</a>
-            </div>
-            @endforeach
         </div>
         <div class="d-flex justify-content-center complete-btn-grp pt-5 mb-5">
             <div><a class="text-light btn btn-secondary me-3" href="/project/{{ $project->id }}"><b>戻る</b></a></div>

@@ -24,15 +24,15 @@ Route::prefix('/project')->middleware('auth')->group(function () {
 });
 
 // チケット作成、詳細、コメント投稿
-Route::prefix('/project/{pid}/ticket')->middleware('auth')->group(function () {
-    Route::get('/create', [TicketController::class, 'create']);
+Route::prefix('/project/{project}/ticket')->middleware('auth')->group(function () {
+    Route::get('/create', [TicketController::class, 'create'])->name('ticket.create');
     Route::post('/store', [TicketController::class, 'store'])->name('ticket.store');
-    Route::get('/{tid}', [TicketController::class, 'show'])->name('ticket.show');
-    Route::post('/{tid}', [CommentController::class, 'store']);
-    Route::put('/{tid}/status', [TicketController::class, 'status'])->name('ticket.status');
-    Route::delete('/{tid}/delete', [TicketController::class, 'delete'])->name('ticket.delete');
-    Route::get('/{tid}/edit', [TicketController::class, 'edit'])->name('ticket.edit');
-    Route::put('/{tid}/edit', [TicketController::class, 'update'])->name('ticket.edit.put');
+    Route::get('/{ticket}', [TicketController::class, 'show'])->name('ticket.show');
+    Route::post('/{ticket}', [CommentController::class, 'store']);
+    Route::put('/{ticket}/status', [TicketController::class, 'status'])->name('ticket.status');
+    Route::delete('/{ticket}/delete', [TicketController::class, 'delete'])->name('ticket.delete');
+    Route::get('/{ticket}/edit', [TicketController::class, 'edit'])->name('ticket.edit');
+    Route::put('/{ticket}/edit', [TicketController::class, 'update'])->name('ticket.edit.put');
 });
 
 // コメント 編集、削除
