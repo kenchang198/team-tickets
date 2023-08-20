@@ -139,24 +139,7 @@ class TicketController extends Controller
 
         $this->authorize('update', $ticket);
 
-        $ticket->ticket_name = $data['ticket_name'];
-        $ticket->responsible_person_id = $data['t_responsible_person_id'];
-        $ticket->content = $data['content'];
-        $ticket->start_date = $data['start_date'];
-        $ticket->end_date = $data['end_date'];
-
-        $ticket->updated_at = date('Y-m-d H:i:s');
-
-        $ticket->updated_user_id = Auth::user()->id;
-
-        $ticket->save();
-        
-        // （関連）要確認メンバーの初期化
-        $ticket->users()->detach();
-        
-        if (isset($data['user_id'])) {
-            $ticket->users()->attach($data['user_id']);
-        }
+        $ticket->__update($data);
         
         return redirect()->route('ticket.show', [$project, $ticket]);
     }

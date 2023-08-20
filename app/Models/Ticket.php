@@ -103,4 +103,24 @@ class Ticket extends Model
             $ticket->users()->attach($data['user_id']);
         }
     }
+
+    public function __update(array $data)
+    {
+        $this->ticket_name = $data['ticket_name'];
+        $this->responsible_person_id = $data['t_responsible_person_id'];
+        $this->content = $data['content'];
+        $this->start_date = $data['start_date'];
+        $this->end_date = $data['end_date'];
+        $this->updated_at = date('Y-m-d H:i:s');
+        $this->updated_user_id = Auth::user()->id;
+        
+        $this->save();
+        
+        //（関連）要確認メンバーの初期化
+        $this->users()->detach(); 
+        
+        if (isset($data['user_id'])) {
+            $this->users()->attach($data['user_id']);
+        }
+    }
 }
