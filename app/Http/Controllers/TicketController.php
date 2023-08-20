@@ -17,17 +17,6 @@ use Illuminate\Support\Facades\Auth;
 class TicketController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
      * @param \App\Models\Project $project
      * @return \Illuminate\Http\Response
      */
@@ -53,9 +42,8 @@ class TicketController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     * @param  \App\Http\Requests\Ticket\StoreRequest
-     * @param  \App\Models\Project $project
+     * @param \App\Http\Requests\Ticket\StoreRequest
+     * @param \App\Models\Project $project
      * @return \Illuminate\Http\Response
      */
     public function store(StoreRequest $request, Project $project)
@@ -72,10 +60,8 @@ class TicketController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Project $project
-     * @param  \App\Models\Ticket $ticket
+     * @param \App\Models\Project $project
+     * @param \App\Models\Ticket $ticket
      * @return \Illuminate\Http\Response
      */
     public function show(Project $project, Ticket $ticket)
@@ -96,8 +82,8 @@ class TicketController extends Controller
     }
 
     /**
-     * @param  \App\Models\Project $project
-     * @param  \App\Models\Ticket $ticket
+     * @param \App\Models\Project $project
+     * @param \App\Models\Ticket $ticket
      * @return \Illuminate\Http\Response
      */
     public function edit(Project $project, Ticket $ticket)
@@ -124,11 +110,9 @@ class TicketController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     * 
-     * @param  \App\Http\Requests\Ticket\UpdateRequest
-     * @param  \App\Models\Project $project
-     * @param  \App\Models\Ticket $ticket
+     * @param \App\Http\Requests\Ticket\UpdateRequest
+     * @param \App\Models\Project $project
+     * @param \App\Models\Ticket $ticket
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateRequest $request, Project $project, Ticket $ticket)
@@ -145,9 +129,9 @@ class TicketController extends Controller
     }
 
     /**
-     * @param  \App\Http\Requests\Ticket\StatusRequest
-     * @param  \App\Models\Project $project
-     * @param  \App\Models\Ticket $ticket
+     * @param \App\Http\Requests\Ticket\StatusRequest
+     * @param \App\Models\Project $project
+     * @param \App\Models\Ticket $ticket
      * @return \Illuminate\Http\Response
      */
     public function status(StatusRequest $request, Project $project, Ticket $ticket)
@@ -168,9 +152,8 @@ class TicketController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     * @param  \App\Models\Project $project
-     * @param  \App\Models\Ticket $ticket
+     * @param \App\Models\Project $project
+     * @param \App\Models\Ticket $ticket
      * @return \Illuminate\Http\Response
      */
     public function delete(Project $project, Ticket $ticket)
