@@ -23,12 +23,7 @@ class CommentController extends Controller
         $data = $request->validated();
         
         $comment = new Comment;
-        
-        $comment->ticket_id = $ticket->id;
-        $comment->user_id = Auth::user()->id;
-        $comment->comment = $data['comment'];
-
-        $comment->save();
+        $comment->__create($data, $ticket->id);
 
         return redirect()->route('ticket.show', [$project, $ticket]);
     }
@@ -42,9 +37,7 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment)
     {
-        $comment->comment = $request->input('comment');
-        
-        $comment->save();
+        $comment->__update($request->input('comment'));
 
         $id = $comment->id;
         
