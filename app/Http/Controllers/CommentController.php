@@ -13,9 +13,9 @@ use App\Models\Ticket;
 class CommentController extends Controller
 {
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\Comment\StoreRequest  $request
+     * @param \App\Http\Requests\Comment\StoreRequest $request
+     * @param \App\Models\Project $project
+     * @param \App\Models\Ticket $ticket
      * @return \Illuminate\Http\Response
      */
     public function store(StoreRequest $request, Project $project, Ticket $ticket)
@@ -29,10 +29,8 @@ class CommentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Comment  $comment
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Comment $comment
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Comment $comment)
@@ -47,9 +45,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\comment  $comment
+     * @param \App\Models\comment $comment
      * @return \Illuminate\Http\Response
      */
     public function destroy(comment $comment)
