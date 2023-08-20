@@ -122,6 +122,7 @@ class ProjectController extends Controller
      * プロジェクトのステータスを更新
      *
      * @param  \Illuminate\Http\Request
+     * @param  \App\Models\Project $project
      * @return \Illuminate\Http\Response
      */
     public function status(Request $request, Project $project)
@@ -143,7 +144,7 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Http\Requests\Project\StoreRequest
+     * @param  \App\Models\Project $project
      * @return \Illuminate\Http\Response
      */
     public function delete(Project $project)
