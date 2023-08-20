@@ -13,6 +13,19 @@ class Ticket extends Model
     protected $table = 'tickets';
     public $timestamps = false;
 
+    protected $fillable = [
+        'ticket_name',
+        'responsible_person_id',
+        'project_id',
+        'content',
+        'start_date',
+        'end_date',
+        'created_at',
+        'updated_at',
+        'created_user_id',
+        'updated_user_id'
+    ];
+
     public function users()
     {
         return $this->belongsToMany(User::class);
@@ -67,5 +80,27 @@ class Ticket extends Model
             || $project->responsible_person_id === Auth::user()->id
             || $this->responsible_person_id === Auth::user()->id
             || $this->created_user_id === Auth::user()->id;
+    }
+
+    public function __create(array $data, String $project_id)
+    {
+        $ticket = $this->create(
+            [
+                'ticket_name' => $data['ticket_name'],
+                'responsible_person_id' => $data['t_responsible_person_id'],
+                'project_id' => $project_id,
+                'content' => $data['content'],
+                'start_date' => $data['start_date'],
+                'end_date' => $data['end_date'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'created_user_id' => Auth::user()->id,
+                'updated_user_id' => Auth::user()->id
+            ]
+        );
+
+        if (isset($data['user_id'])) {
+            $ticket->users()->attach($data['user_id']);
+        }
     }
 }

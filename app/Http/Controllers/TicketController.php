@@ -56,33 +56,17 @@ class TicketController extends Controller
      * Store a newly created resource in storage.
      * @param  \App\Http\Requests\Ticket\StoreRequest
      * @param  \App\Models\Project $project
-     * @param  \App\Models\Ticket $ticket
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRequest $request, Project $project, Ticket $ticket)
+    public function store(StoreRequest $request, Project $project)
     {
         $this->authorize('view', $project);
 
         $data = $request->validated();
 
-        $ticket->ticket_name = $data['ticket_name'];
-        $ticket->responsible_person_id = $data['t_responsible_person_id'];
-        $ticket->project_id = $project->id;
-        $ticket->content = $data['content'];
-        $ticket->start_date = $data['start_date'];
-        $ticket->end_date = $data['end_date'];
+        $ticket = new Ticket();
 
-        $ticket->created_at = date('Y-m-d H:i:s');
-        $ticket->updated_at = date('Y-m-d H:i:s');
-
-        $ticket->created_user_id = Auth::user()->id;
-        $ticket->updated_user_id = Auth::user()->id;
-
-        $ticket->save();
-
-        if (isset($data['user_id'])) {
-            $ticket->users()->attach($data['user_id']);
-        }
+        $ticket->__create($data, $project->id);
 
         return redirect()->route('project.detail', $project);
     }
