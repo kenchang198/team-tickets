@@ -55,6 +55,14 @@
         <form id="comment-{{$comment->id}}" action="{{ route('comment.update', $comment) }}" class="comment-wrapper mt-4 @if($loop->last) border-none @endif" method="post">
             @method('put')
             @csrf
+            @error("comment-{$comment->id}")
+            <div class="alert alert-danger">
+                <ul>
+                    <li class="_error-msg"><?= preg_replace('/comment-\d+/', '${1}コメント', $message); ?></li>
+                </ul>
+            </div>
+            @enderror
+            
             <p>
                 @if (!$comment->user->del_flg)
                 <span>{{ $comment->user->name }}</span>
@@ -67,7 +75,11 @@
                 @endif
             </p>
 
-            <textarea name="comment" readonly class="comment mb-2 form-control auto-resize-textarea">{{$comment->comment}}</textarea>
+            @if (old("comment-{$comment->id}"))
+            <textarea name="comment-{{ $comment->id }}" readonly class="comment mb-2 form-control auto-resize-textarea">{{ old("comment-{$comment->id}") }}</textarea>
+            @else
+            <textarea name="comment-{{ $comment->id }}" readonly class="comment mb-2 form-control auto-resize-textarea">{{$comment->comment}}</textarea>
+            @endif
             @if ($comment->user_id == Auth::user()->id)
             <div class="text-end mb-3">
                 <button type="submit" style="display:none;" class="comment-save btn btn-primary px-3">保存</button>
@@ -82,17 +94,15 @@
         @endforeach
         
         <form class="comment-add-wrapper" action="{{ route('ticket.show', [$project, $ticket]) }}" method="post">
-            <p>コメントを追加</p>
             @csrf
-            @if ($errors->any())
+            @error('comment')
             <div class="alert alert-danger">
                 <ul>
-                    @foreach ($errors->all() as $error)
-                    <li class="_error-msg">{{ $error }}</li>
-                    @endforeach
+                    <li class="_error-msg">{{ $message }}</li>
                 </ul>
             </div>
-            @endif
+            @enderror
+            <p>コメントを追加</p>
             <textarea class="comment mb-2 form-control auto-resize-textarea" name="comment" id="" cols="20" rows="3">{{ old('comment') }}</textarea>
             <div class="mb-3 text-end">
                 <button class="btn btn-primary px-3" type="submit">追加</button>

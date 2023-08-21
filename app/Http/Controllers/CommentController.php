@@ -35,9 +35,19 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment)
     {
-        $comment->__update($request->input('comment'));
-
         $id = $comment->id;
+        
+        $data = $request->validate(
+            [
+                'comment-' . $id => 'required|string|max:1000',
+            ],
+            [
+                'comment-' . $id . '.required' => 'コメントを入力してください。',
+                'comment-' . $id . '.max' => 'コメントは、:max文字以下で入力してください。',
+            ]
+        );
+
+        $comment->__update($data["comment-$id"]);
         
         $redirectUrl = URL::previous() . "#comment-$id";
         
