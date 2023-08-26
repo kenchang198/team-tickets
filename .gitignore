@@ -5,6 +5,7 @@
 /vendor
 .env
 .env.backup
+.env.testing
 .phpunit.result.cache
 docker-compose.override.yml
 Homestead.json
@@ -15,4 +16,4 @@ yarn-error.log
 /.vscode
 composer.lock
 .DS_Store
-
+phpunit.xml
