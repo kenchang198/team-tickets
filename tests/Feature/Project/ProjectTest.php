@@ -12,6 +12,8 @@ class ProjectTest extends FeatureBaseTestCase
     protected $user;
     protected $prj_member_ids;
     protected $project_name;
+
+    protected $project;
     
     public function setUp(): void
     {
@@ -28,6 +30,16 @@ class ProjectTest extends FeatureBaseTestCase
         ];
         
         $this->project_name = FakerFactory::create()->text(20);
+
+        // 更新対象のプロジェクト作成
+        $this->project = Project::factory()->create([
+            'project_name' => $this->project_name,
+            'responsible_person_id' => $this->user->id,
+            'created_user_id' => $this->user->id,
+            'updated_user_id' => $this->user->id,
+        ]);
+
+        $this->project->users()->attach($this->prj_member_ids);
     }
 
     // プロジェクト作成フォーム表示テスト
@@ -64,5 +76,15 @@ class ProjectTest extends FeatureBaseTestCase
                 'user_id'=> $id
             ]);
         }
+    }
+
+    // プロジェクトの編集フォーム表示テスト
+    public function test_can_edit_project()
+    {
+        $project = Project::latest('id')->first();
+        
+        // ユーザーがプロジェクトを編集できる場合（ポリシーに従う場合）
+        $response = $this->actingAs($this->user)->get("/project/{$project->id}/edit");
+        $response->assertStatus(200);
     }
 }
