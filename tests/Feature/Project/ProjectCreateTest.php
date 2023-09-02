@@ -3,9 +3,9 @@
 namespace Tests\Feature\Project;
 
 use Tests\Feature\FeatureBaseTestCase;
-use App\Models\User;
 use App\Models\Project;
 use Faker\Factory as FakerFactory;
+use Tests\Feature\ProjectTestCommonSetup;
 
 class ProjectCreateTest extends FeatureBaseTestCase
 {
@@ -16,19 +16,12 @@ class ProjectCreateTest extends FeatureBaseTestCase
 
     protected $members;
     
+    use ProjectTestCommonSetup;
+
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->user = User::factory()->create();
-        $this->members = User::factory(4)->create();
-        
-        // プロジェクトへメンバー追加
-        $this->prj_member_ids = [
-            $this->user->id,
-            $this->members[0]->id,
-            $this->members[2]->id
-        ];
+        $this->projectSetup();
     }
 
     // プロジェクト作成フォーム表示テスト
