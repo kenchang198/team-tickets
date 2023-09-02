@@ -14,19 +14,21 @@ class ProjectTest extends FeatureBaseTestCase
     protected $project_name;
 
     protected $project;
+
+    protected $members;
     
     public function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
-
+        $this->members = User::factory(4)->create();
+        
         // プロジェクトへメンバー追加
         $this->prj_member_ids = [
             $this->user->id,
-            User::factory()->create()->id,
-            User::factory()->create()->id,
-            User::factory()->create()->id
+            $this->members[0]->id,
+            $this->members[2]->id
         ];
         
         $this->project_name = FakerFactory::create()->text(20);
@@ -96,7 +98,11 @@ class ProjectTest extends FeatureBaseTestCase
         $param = [
             'project_name' => 'New Project Name',
             'responsible_person_id' => $this->user->id,
-            'user_id' => $this->prj_member_ids
+            'user_id' => [
+                $this->user->id,
+                $this->members[1]->id,
+                $this->members[2]->id
+            ]
         ];
         
         $response = $this->actingAs($this->user)->put($url, $param);
@@ -109,5 +115,21 @@ class ProjectTest extends FeatureBaseTestCase
         ];
 
         $this->assertDatabaseHas('projects', $updatedProject);
+
+        // プロジェクト - メンバーの関連付けが更新されているかの確認
+        foreach ($this->members as $member) {
+            
+            $projectMembers = [
+                'project_id' => $this->project->id,
+                'user_id' => $member->id
+            ];
+
+            // パラメータで指定したプロジェクトメンバーidである
+            if (in_array($member->id, $param['user_id'])) {
+                $this->assertDatabaseHas('project_user', $projectMembers);
+            } else {
+                $this->assertDatabaseMissing('project_user', $projectMembers);
+            }
+        }
     }
 }
