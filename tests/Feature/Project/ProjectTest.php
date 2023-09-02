@@ -11,8 +11,7 @@ class ProjectTest extends FeatureBaseTestCase
 {
     protected $user;
     protected $prj_member_ids;
-    protected $project_name;
-
+    
     protected $project;
 
     protected $members;
@@ -31,8 +30,6 @@ class ProjectTest extends FeatureBaseTestCase
             $this->members[2]->id
         ];
         
-        $this->project_name = FakerFactory::create()->text(20);
-
         // 更新対象のプロジェクト作成
         $this->project = Project::factory()->create([
             'project_name' => 'Project',
@@ -54,23 +51,26 @@ class ProjectTest extends FeatureBaseTestCase
     // プロジェクトの保存テスト
     public function test_can_store_project()
     {
-        $response = $this->actingAs($this->user)->post('/project/store', [
-            'project_name' => $this->project_name,
+        $param = [
+            'project_name' => FakerFactory::create()->text(20),
             'responsible_person_id' => $this->user->id,
             'user_id' => $this->prj_member_ids
-        ]);
+        ];
+
+        $response = $this->actingAs($this->user)->post('/project/store', $param);
     
         $response->assertStatus(302);
-    
+        
+        $project = Project::latest('id')->first();
+        
         $this->assertDatabaseHas('projects', [
-            'project_name' => $this->project_name,
-            'responsible_person_id' => $this->user->id,
+            'id' => $project->id,
+            'project_name' => $param['project_name'],
+            'responsible_person_id' => $param['responsible_person_id'],
             'created_user_id' => $this->user->id,
             'updated_user_id' => $this->user->id
         ]);
         
-        $project = Project::latest('id')->first();
-
         // 関連テーブルへのプロジェクトメンバーの保存結果を確認
         foreach ($this->prj_member_ids as $id) {
             $this->assertDatabaseHas('project_user', [
