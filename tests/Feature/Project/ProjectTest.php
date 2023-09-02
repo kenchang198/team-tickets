@@ -33,7 +33,7 @@ class ProjectTest extends FeatureBaseTestCase
 
         // 更新対象のプロジェクト作成
         $this->project = Project::factory()->create([
-            'project_name' => $this->project_name,
+            'project_name' => 'Project',
             'responsible_person_id' => $this->user->id,
             'created_user_id' => $this->user->id,
             'updated_user_id' => $this->user->id,
@@ -86,5 +86,28 @@ class ProjectTest extends FeatureBaseTestCase
         // ユーザーがプロジェクトを編集できる場合（ポリシーに従う場合）
         $response = $this->actingAs($this->user)->get($url);
         $response->assertStatus(200);
+    }
+
+    // プロジェクトの編集完了テスト
+    public function test_can_update_project()
+    {
+        $url = route('project.edit.put', $this->project);
+        
+        $param = [
+            'project_name' => 'New Project Name',
+            'responsible_person_id' => $this->user->id,
+            'user_id' => $this->prj_member_ids
+        ];
+        
+        $response = $this->actingAs($this->user)->put($url, $param);
+        $response->assertStatus(302);
+        
+        $updatedProject = [
+            'id' => $this->project->id,
+            'project_name' => $param['project_name'],
+            'responsible_person_id' => $param['responsible_person_id']
+        ];
+
+        $this->assertDatabaseHas('projects', $updatedProject);
     }
 }
