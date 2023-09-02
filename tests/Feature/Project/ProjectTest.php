@@ -81,10 +81,10 @@ class ProjectTest extends FeatureBaseTestCase
     // プロジェクトの編集フォーム表示テスト
     public function test_can_edit_project()
     {
-        $project = Project::latest('id')->first();
+        $url = route('project.edit', $this->project);
         
         // ユーザーがプロジェクトを編集できる場合（ポリシーに従う場合）
-        $response = $this->actingAs($this->user)->get("/project/{$project->id}/edit");
+        $response = $this->actingAs($this->user)->get($url);
         $response->assertStatus(200);
     }
 }
