@@ -11,6 +11,7 @@ trait ProjectTestCommonSetup
     {
         $this->user = User::factory()->create();
         $this->members = User::factory(4)->create();
+        $this->responsible_person = $this->members[0];
         
         // プロジェクトへメンバー追加
         $this->prj_member_ids = [
@@ -21,7 +22,7 @@ trait ProjectTestCommonSetup
         
         $this->project = Project::factory()->create([
             'project_name' => 'Project',
-            'responsible_person_id' => $this->user->id,
+            'responsible_person_id' => $this->responsible_person->id,
             'created_user_id' => $this->user->id,
             'updated_user_id' => $this->user->id,
         ]);

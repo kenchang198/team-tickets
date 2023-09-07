@@ -31,6 +31,20 @@ class ProjectUpdateTest extends FeatureBaseTestCase
         // ユーザーがプロジェクトを編集できる場合（ポリシーに従う場合）
         $response = $this->actingAs($this->user)->get($url);
         $response->assertStatus(200);
+
+        // プロジェクトの責任者によるアクセス
+        $response = $this->actingAs($this->responsible_person)->get($url);
+        $response->assertStatus(200);
+        
+        // プロジェクト作成者とは異なる管理者ユーザによるアクセス
+        $admin = User::factory()->create(['admin' => 1]);
+        $response = $this->actingAs($admin)->get($url);
+        $response->assertStatus(200);
+
+        // プロジェクト作成者とは異なる一般ユーザによるアクセス
+        $other = User::factory()->create(['admin' => 0]);
+        $response = $this->actingAs($other)->get($url);
+        $response->assertStatus(403);
     }
 
     // プロジェクトの編集完了テスト
