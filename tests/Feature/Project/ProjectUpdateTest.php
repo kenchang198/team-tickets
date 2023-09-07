@@ -4,6 +4,7 @@ namespace Tests\Feature\Project;
 
 use Tests\Feature\FeatureBaseTestCase;
 use App\Models\User;
+use Database\Factories\UserFactory;
 use Tests\Feature\ProjectTestCommonSetup;
 
 class ProjectUpdateTest extends FeatureBaseTestCase
@@ -40,8 +41,12 @@ class ProjectUpdateTest extends FeatureBaseTestCase
         $admin = User::factory()->create(['admin' => 1]);
         $response = $this->actingAs($admin)->get($url);
         $response->assertStatus(200);
-
-        // プロジェクト作成者とは異なる一般ユーザによるアクセス
+        
+        // 責任者、作成者でない通常のプロジェクトメンバー
+        $response = $this->actingAs($this->members[2])->get($url);
+        $response->assertStatus(403);
+        
+        // プロジェクトに属さない一般ユーザによるアクセス
         $other = User::factory()->create(['admin' => 0]);
         $response = $this->actingAs($other)->get($url);
         $response->assertStatus(403);
@@ -54,17 +59,36 @@ class ProjectUpdateTest extends FeatureBaseTestCase
         
         $param = [
             'project_name' => 'New Project Name',
-            'responsible_person_id' => $this->user->id,
+            'responsible_person_id' => $this->responsible_person->id,
             'user_id' => [
                 $this->user->id,
                 $this->members[1]->id,
-                $this->members[2]->id
+                $this->members[2]->id,
             ]
         ];
         
+        // プロジェクト作成者
         $response = $this->actingAs($this->user)->put($url, $param);
         $response->assertStatus(302);
         
+        // プロジェクトの責任者による更新
+        $response = $this->actingAs($this->responsible_person)->put($url, $param);
+        $response->assertStatus(302);
+        
+        // プロジェクト作成者以外の管理者ユーザ
+        $admin = User::factory()->create(['admin' => 1]);
+        $response = $this->actingAs($admin)->put($url, $param);
+        $response->assertStatus(302);
+
+        // 責任者、作成者でない通常のプロジェクトメンバー
+        $response = $this->actingAs($this->members[1])->put($url, $param);
+        $response->assertStatus(403);
+        
+        // プロジェクトに属さないユーザ
+        $other = User::factory()->create(['admin' => 0]);
+        $response = $this->actingAs($other)->put($url, $param);
+        $response->assertStatus(403);
+
         $updatedProject = [
             'id' => $this->project->id,
             'project_name' => $param['project_name'],
@@ -82,7 +106,10 @@ class ProjectUpdateTest extends FeatureBaseTestCase
             ];
 
             // パラメータで指定したプロジェクトメンバーidである
-            if (in_array($member->id, $param['user_id'])) {
+            // （プロジェクトの責任者は自動的にメンバーに含まれる）
+            if (in_array($member->id, $param['user_id']) 
+                || $member->id === $this->responsible_person->id
+            ) {
                 $this->assertDatabaseHas('project_user', $projectMembers);
             } else {
                 $this->assertDatabaseMissing('project_user', $projectMembers);
