@@ -16,23 +16,13 @@ class ProjectsTableSeeder extends Seeder
     {
         DB::table('projects')->insert([
             [
-                'project_name' => 'プロジェクトXXX',
+                'project_name' => 'InnoTech Solutions ERP Implementation',
                 'responsible_person_id' => 1,
                 'status_code' => 'active',
                 'created_at' => now(),
                 'created_user_id' => 1,
                 'updated_at' => now(),
                 'updated_user_id' => 1,
-                'del_flg' => false,
-            ],
-            [
-                'project_name' => 'プロジェクトYYY',
-                'responsible_person_id' => 2,
-                'status_code' => 'active',
-                'created_at' => now(),
-                'created_user_id' => 2,
-                'updated_at' => now(),
-                'updated_user_id' => 2,
                 'del_flg' => false,
             ],
         ]);
