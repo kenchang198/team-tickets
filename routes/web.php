@@ -28,7 +28,7 @@ Route::prefix('/project/{project}/ticket')->middleware('auth')->group(function (
     Route::get('/create', [TicketController::class, 'create'])->name('ticket.create');
     Route::post('/store', [TicketController::class, 'store'])->name('ticket.store');
     Route::get('/{ticket}', [TicketController::class, 'show'])->name('ticket.show');
-    Route::post('/{ticket}', [CommentController::class, 'store']);
+    Route::post('/{ticket}', [CommentController::class, 'store'])->name('comment.store');
     Route::put('/{ticket}/status', [TicketController::class, 'status'])->name('ticket.status');
     Route::delete('/{ticket}/delete', [TicketController::class, 'delete'])->name('ticket.delete');
     Route::get('/{ticket}/edit', [TicketController::class, 'edit'])->name('ticket.edit');

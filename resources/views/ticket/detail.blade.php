@@ -93,7 +93,7 @@
         </form>
         @endforeach
         
-        <form class="comment-add-wrapper" action="{{ route('ticket.show', [$project, $ticket]) }}" method="post">
+        <form class="comment-add-wrapper" action="{{ route('comment.store', [$project, $ticket]) }}" method="post">
             @csrf
             @error('comment')
             <div class="alert alert-danger">
