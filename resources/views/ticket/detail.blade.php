@@ -69,7 +69,7 @@
                 @else
                 <span class="text-decoration-line-through">{{ $comment->user->name }}</span>
                 @endif
-                <span class="text-black-50 ps-3">{{ $comment->CreatedAt() }}</span>
+                <span class="text-black-50 ps-3">{{ $comment->createdAt() }}</span>
                 @if ($comment->user->id == Auth::user()->id)
                 <a class="del-btn-{{$comment->id}}" href="javascript:;" onclick="submitDelForm({{$comment->id}})">削除</a>
                 @endif

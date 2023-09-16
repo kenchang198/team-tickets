@@ -16,9 +16,9 @@ class Comment extends Model
         'comment'
     ];
 
-    public function CreatedAt()
+    public function createdAt()
     {
-        return \Carbon\Carbon::parse($this->created_at)->format('Y/m/d H:i:s');
+        return \Carbon\Carbon::parse($this->created_at)->format('Y/m/d H:i');
     }
 
     public function user()
