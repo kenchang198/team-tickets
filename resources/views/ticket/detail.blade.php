@@ -52,6 +52,7 @@
     <div class="mt-5 comments">
         <p class="mb-3"><b>コメント</b></p>
         @foreach ($ticket->comments as $comment)
+        <div>
         <form id="comment-{{$comment->id}}" action="{{ route('comment.update', $comment) }}" class="comment-wrapper mt-4 @if($loop->last) border-none @endif" method="post">
             @method('put')
             @csrf
@@ -91,6 +92,7 @@
             @method('delete')
             @csrf
         </form>
+        </div>
         @endforeach
     </div>
 
@@ -130,7 +132,7 @@
         <a class="btn btn-secondary px-3" href="{{ route('project.detail', $project) }}">戻る</a>
     </div>
 </div>
-
+<script src="/js/comment.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 
