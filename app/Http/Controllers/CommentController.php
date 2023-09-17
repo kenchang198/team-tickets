@@ -22,14 +22,22 @@ class CommentController extends Controller
     {
         $data = $request->validated();
         
-        $comment = new Comment;
-        $comment->__create($data, $ticket->id);
-
+        $comment = Comment::create(
+            [
+                'ticket_id' => $ticket->id,
+                'user_id' => Auth::user()->id,
+                'comment' => $data['comment'],
+            ]
+        );
+        
         return response()->json(
             [
                 'success' => true,
                 'username' => Auth::user()->name,
                 'created_at' => $comment->createdAt(),
+                'id' => $comment->id,
+                'update_url' => route('comment.update', $comment),
+                'delete_url' => route('comment.delete', $comment),
             ]
         );
     }

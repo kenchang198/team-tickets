@@ -18,26 +18,26 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-
+                
                 const comment = document.createElement('div');
                 
                 comment.innerHTML = `
-                    <form id="comment-1" action="http://localhost:50080/comment/update/1" class="comment-wrapper mt-4 border-none" method="post">
+                    <form id="comment-${data.id}" action="${data.update_url}" class="comment-wrapper mt-4 border-none" method="post">
                     <input type="hidden" name="_method" value="put">
                     <input type="hidden" name="_token" value="1fh97zbF7vBWHVRuEiDYAXkgLkBIL2ced4DbDEQ7">
                     <p>
                         <span>${data.username}</span>
                         <span class="text-black-50 ps-3">${data.created_at}</span>
-                        <a class="del-btn-1" href="javascript:;" onclick="submitDelForm(1)">削除</a>
+                        <a class="del-btn-1" href="javascript:;" onclick="submitDelForm(${data.id})">削除</a>
                     </p>
 
-                    <textarea name="comment-1" readonly="" class="comment mb-2 form-control auto-resize-textarea" style="height: 60px;">${commentTextArea.value}</textarea>
+                    <textarea name="comment-${data.id}" readonly="" class="comment mb-2 form-control auto-resize-textarea" style="height: 60px;">${commentTextArea.value}</textarea>
                     <div class="text-end mb-3">
                         <button type="submit" style="display:none;" class="comment-save btn btn-primary px-3">保存</button>
                         <button class="comment-edit btn btn-secondary px-3">編集</button>
                     </div>
                     </form>
-                    <form class="del-form-86" action="http://localhost:50080/comment/delete/86" method="post">
+                    <form class="del-form-${data.id}" action="${data.delete_url}" method="post">
                         <input type="hidden" name="_method" value="delete">
                         <input type="hidden" name="_token" value="fwNmiqJwCNqxWHiSGnhoQFF7JsHtzojBlyhQhY2H">
                     </form>

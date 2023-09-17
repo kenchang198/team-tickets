@@ -27,17 +27,6 @@ class Comment extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function __create(array $data, String $ticket_id)
-    {
-        $this->create(
-            [
-                'ticket_id' => $ticket_id,
-                'user_id' => Auth::user()->id,
-                'comment' => $data['comment'],
-            ]
-        );
-    }
-
     public function __update(String $comment)
     {
         $this->comment = $comment;
