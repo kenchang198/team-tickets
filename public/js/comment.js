@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const commentForm = document.querySelector('.comment-add-wrapper');
     const commentTextArea = commentForm.querySelector('.comment');
-    const commentList = document.querySelector('.comments'); // コメント一覧を表示する要素
+    const commentList = document.querySelector('.comments');
 
     commentForm.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -15,11 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 'X-CSRF-TOKEN': formData.get('_token'),
             },
         })
-        .then(response => response.json()) // サーバーからのJSONレスポンスを解析
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // コメントが成功裏に投稿された場合の処理
-                
+
                 const comment = document.createElement('div');
                 
                 comment.innerHTML = `
@@ -27,8 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     <input type="hidden" name="_method" value="put">
                     <input type="hidden" name="_token" value="1fh97zbF7vBWHVRuEiDYAXkgLkBIL2ced4DbDEQ7">
                     <p>
-                        <span>投稿者の名前</span>
-                        <span class="text-black-50 ps-3">2023/mm/dd HH:MM:SS</span>
+                        <span>${data.username}</span>
+                        <span class="text-black-50 ps-3">${data.created_at}</span>
                         <a class="del-btn-1" href="javascript:;" onclick="submitDelForm(1)">削除</a>
                     </p>
 
@@ -37,6 +36,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         <button type="submit" style="display:none;" class="comment-save btn btn-primary px-3">保存</button>
                         <button class="comment-edit btn btn-secondary px-3">編集</button>
                     </div>
+                    </form>
+                    <form class="del-form-86" action="http://localhost:50080/comment/delete/86" method="post">
+                        <input type="hidden" name="_method" value="delete">
+                        <input type="hidden" name="_token" value="fwNmiqJwCNqxWHiSGnhoQFF7JsHtzojBlyhQhY2H">
                     </form>
                     `;
 

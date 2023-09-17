@@ -25,8 +25,13 @@ class CommentController extends Controller
         $comment = new Comment;
         $comment->__create($data, $ticket->id);
 
-        // return redirect()->route('ticket.show', [$project, $ticket]);
-        return response()->json(['success' => true]);
+        return response()->json(
+            [
+                'success' => true,
+                'username' => Auth::user()->name,
+                'created_at' => $comment->createdAt(),
+            ]
+        );
     }
     
     /**
