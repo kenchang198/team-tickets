@@ -96,6 +96,8 @@
         @endforeach
     </div>
 
+    <div class="mt-5 _comments"></div>
+
     <form class="comment-add-wrapper" action="{{ route('comment.store', [$project, $ticket]) }}" method="post">
         @csrf
         @error('comment')

@@ -12,6 +12,21 @@ use App\Models\Ticket;
 
 class CommentController extends Controller
 {
+    
+    // コメント一覧を取得するAPI
+    public function index(Ticket $ticket)
+    {
+        $comments = $ticket->comments->load('user');
+        
+        return response()->json(
+            [
+                'success' => true,
+                'comments' => $comments,
+                'csrf_token' => csrf_token(),
+            ]
+        );
+    }
+
     /**
      * @param \App\Http\Requests\Comment\StoreRequest $request
      * @param \App\Models\Project $project

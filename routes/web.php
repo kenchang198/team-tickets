@@ -35,8 +35,9 @@ Route::prefix('/project/{project}/ticket')->middleware('auth')->group(function (
     Route::put('/{ticket}/edit', [TicketController::class, 'update'])->name('ticket.edit.put');
 });
 
-// コメント 編集、削除
+// コメント 一覧（API）、編集、削除
 Route::prefix('/comment')->middleware('auth')->group(function() {
+    Route::get('/{ticket}', [CommentController::class, 'index'])->name('comment.index');
     Route::put('/update/{comment}', [CommentController::class, 'update'])->name('comment.update');
     Route::delete('/delete/{comment}', [CommentController::class, 'destroy'])->name('comment.delete');
 });
