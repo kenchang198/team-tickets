@@ -38,6 +38,7 @@ class CommentController extends Controller
                 'id' => $comment->id,
                 'update_url' => route('comment.update', $comment),
                 'delete_url' => route('comment.delete', $comment),
+                'csrf_token' => csrf_token(),
             ]
         );
     }

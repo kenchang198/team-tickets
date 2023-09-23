@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 comment.innerHTML = `
                     <form id="comment-${data.id}" action="${data.update_url}" class="comment-wrapper mt-4 border-none" method="post">
                     <input type="hidden" name="_method" value="put">
-                    <input type="hidden" name="_token" value="1fh97zbF7vBWHVRuEiDYAXkgLkBIL2ced4DbDEQ7">
+                    <input type="hidden" name="_token" value="${data.csrf_token}">
                     <p>
                         <span>${data.username}</span>
                         <span class="text-black-50 ps-3">${data.created_at}</span>
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </form>
                     <form class="del-form-${data.id}" action="${data.delete_url}" method="post">
                         <input type="hidden" name="_method" value="delete">
-                        <input type="hidden" name="_token" value="fwNmiqJwCNqxWHiSGnhoQFF7JsHtzojBlyhQhY2H">
+                        <input type="hidden" name="_token" value="${data.csrf_token}">
                     </form>
                     `;
 
