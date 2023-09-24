@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <div class="mt-5 _comments"></div>
+    <div class="mt-5 comments"></div>
 
     <form class="comment-add-wrapper" action="{{ route('comment.store', [$project, $ticket]) }}" method="post">
         @csrf

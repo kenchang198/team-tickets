@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // コメント一覧を取得して表示する関数
     async function fetchAndDisplayComments(ticketId) {
-        
+
         try {
             const response = await fetch(`/comment/${ticketId}`);
             
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
             const data = await response.json();
             const comments = data.comments;
-            const commentsContainer = document.querySelector('._comments');
+            const commentsContainer = document.querySelector('.comments');
             
             // reset
             commentsContainer.innerHTML = '';
@@ -78,6 +78,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     `;
                 commentsContainer.appendChild(comment);
             });
+
+            // 最後のコメントの下枠線を消す
+            const lastComment = commentsContainer.lastElementChild;
+            const lastCommentForm = lastComment.querySelector('form');
+            lastCommentForm.classList.add('border-none');
+
         } catch (error) {
             console.error(error);
         }
