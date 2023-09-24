@@ -49,52 +49,6 @@
             <p >更新日: {{ $updated_at }}　{{ $ticket->updateUser->name }}</p>
         </div>
     </div>
-    <div class="mt-5 comments">
-        <p class="mb-3"><b>コメント</b></p>
-        @foreach ($ticket->comments as $comment)
-        <div>
-        <form id="comment-{{$comment->id}}" action="{{ route('comment.update', $comment) }}" class="comment-wrapper mt-4 @if($loop->last) border-none @endif" method="post">
-            @method('put')
-            @csrf
-            @error("comment-{$comment->id}")
-            <div class="alert alert-danger">
-                <ul>
-                    <li class="_error-msg"><?= preg_replace('/comment-\d+/', '${1}コメント', $message); ?></li>
-                </ul>
-            </div>
-            @enderror
-            
-            <p>
-                @if (!$comment->user->del_flg)
-                <span>{{ $comment->user->name }}</span>
-                @else
-                <span class="text-decoration-line-through">{{ $comment->user->name }}</span>
-                @endif
-                <span class="text-black-50 ps-3">{{ $comment->createdAt() }}</span>
-                @if ($comment->user->id == Auth::user()->id)
-                <a class="del-btn-{{$comment->id}}" href="javascript:;" onclick="submitDelForm({{$comment->id}})">削除</a>
-                @endif
-            </p>
-
-            @if (old("comment-{$comment->id}"))
-            <textarea name="comment-{{ $comment->id }}" readonly class="comment mb-2 form-control auto-resize-textarea">{{ old("comment-{$comment->id}") }}</textarea>
-            @else
-            <textarea name="comment-{{ $comment->id }}" readonly class="comment mb-2 form-control auto-resize-textarea">{{$comment->comment}}</textarea>
-            @endif
-            @if ($comment->user_id == Auth::user()->id)
-            <div class="text-end mb-3">
-                <button type="submit" style="display:none;" class="comment-save btn btn-primary px-3">保存</button>
-                <button class="comment-edit btn btn-secondary px-3">編集</button>
-            </div>
-            @endif
-        </form>
-        <form class="del-form-{{$comment->id}}" action="{{ route('comment.delete', $comment) }}" method="post">
-            @method('delete')
-            @csrf
-        </form>
-        </div>
-        @endforeach
-    </div>
 
     <div class="mt-5 _comments"></div>
 
