@@ -92,46 +92,47 @@
 <script src="/js/comment.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-
-        const commentEditBtns = document.querySelectorAll('.comment-edit');
-        const commentSaveBtns= document.querySelectorAll('.comment-save');
-        const textAreas = document.getElementsByClassName('comment');
-
         // コメント 編集ボタン
-        commentEditBtns.forEach((editBtn) => {
-            editBtn.addEventListener('click', (event) => {
+        document.addEventListener('click', (event) => {
+
+            if (event.target.classList.contains('comment-edit')) {
                 
-                const parentWrapper = editBtn.closest('.comment-wrapper');
+                const parentWrapper = event.target.closest('.comment-wrapper');
                 const commentTextarea = parentWrapper.querySelector('.comment');
-
-                // 編集開始時に元の値を保持する
+                
                 commentTextarea.dataset.originalValue = commentTextarea.value;
-
                 commentTextarea.readOnly = false;
-
-                editBtn.style.display = 'none';
-
+                
+                event.target.style.display = 'none';
+                
                 const commentSaveBtn = parentWrapper.querySelector('.comment-save');
                 commentSaveBtn.style.display = 'inline-block';
-
+                
                 event.preventDefault();
-            });
+            }
         });
 
-        // コメント　保存ボタン
-        commentSaveBtns.forEach((saveBtn) => {
-            saveBtn.addEventListener('click', () => {
+        // コメント 保存ボタン
+        document.addEventListener('click', (event) => {
+
+            if (event.target.classList.contains('comment-save')) {
                 
-                const parentWrapper = saveBtn.closest('.comment-wrapper');
+                console.log('コメント保存ボタン');
+                
+                const parentWrapper = event.target.closest('.comment-wrapper');
+                
                 const commentTextarea = parentWrapper.querySelector('.comment');
+                
+                console.log(commentTextarea);
                 commentTextarea.readOnly = true;
 
-                saveBtn.style.display = 'none';
+                event.target.style.display = 'none';
 
                 const commentEditBtn = parentWrapper.querySelector('.comment-edit');
                 commentEditBtn.style.display = 'inline-block';
 
-            });
+                event.preventDefault();
+            }
         });
 
         // 編集状態を解除
@@ -142,6 +143,7 @@
                 return true;
             }
             // textAreasを配列に変換
+            const textAreas = document.getElementsByClassName('comment');
             const textAreaArray = Array.from(textAreas);
 
             // クリックされた要素がテキストエリアか、テキストエリアの親要素かを確認
