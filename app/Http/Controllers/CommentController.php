@@ -92,6 +92,10 @@ class CommentController extends Controller
     {
         $comment->delete();
         
-        return redirect()->back();
+        return response()->json(
+            [
+                'success' => true
+            ]
+        );
     }
 }
