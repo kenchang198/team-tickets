@@ -97,16 +97,19 @@
 
             if (event.target.classList.contains('comment-edit')) {
                 
-                const parentWrapper = event.target.closest('.comment-wrapper');
-                const commentTextarea = parentWrapper.querySelector('.comment');
+                const commentUpdateFrom = event.target.closest('.comment-wrapper');
+                
+                const commentTextarea = commentUpdateFrom.querySelector('.comment');
                 
                 commentTextarea.dataset.originalValue = commentTextarea.value;
                 commentTextarea.readOnly = false;
                 
                 event.target.style.display = 'none';
                 
-                const commentSaveBtn = parentWrapper.querySelector('.comment-save');
+                const commentSaveBtn = commentUpdateFrom.querySelector('.comment-save');
                 commentSaveBtn.style.display = 'inline-block';
+
+                
                 
                 event.preventDefault();
             }
@@ -117,21 +120,35 @@
 
             if (event.target.classList.contains('comment-save')) {
                 
-                console.log('コメント保存ボタン');
+                const commentUpdateFrom = event.target.closest('.comment-wrapper');
+                const commentTextarea = commentUpdateFrom.querySelector('.comment');
+                const commentId = commentUpdateFrom.dataset.comment;
                 
-                const parentWrapper = event.target.closest('.comment-wrapper');
+                const formData = new FormData(commentUpdateFrom);
                 
-                const commentTextarea = parentWrapper.querySelector('.comment');
+                event.preventDefault();
                 
-                console.log(commentTextarea);
+                fetch(commentUpdateFrom.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': formData.get('_token'),
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+                
                 commentTextarea.readOnly = true;
 
                 event.target.style.display = 'none';
 
-                const commentEditBtn = parentWrapper.querySelector('.comment-edit');
+                const commentEditBtn = commentUpdateFrom.querySelector('.comment-edit');
                 commentEditBtn.style.display = 'inline-block';
-
-                event.preventDefault();
             }
         });
 

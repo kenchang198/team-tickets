@@ -59,29 +59,21 @@ class CommentController extends Controller
     }
     
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Comment\StoreRequest $request
      * @param \App\Models\Comment $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(StoreRequest $request, Comment $comment)
     {
-        $id = $comment->id;
+        $data = $request->validated();
         
-        $data = $request->validate(
+        $comment->__update($data["comment"]);
+        
+        return response()->json(
             [
-                'comment-' . $id => 'required|string|max:1000',
-            ],
-            [
-                'comment-' . $id . '.required' => 'コメントを入力してください。',
-                'comment-' . $id . '.max' => 'コメントは、:max文字以下で入力してください。',
+                'success' => true,
             ]
         );
-
-        $comment->__update($data["comment-$id"]);
-        
-        $redirectUrl = URL::previous() . "#comment-$id";
-        
-        return redirect($redirectUrl);
     }
 
     /**

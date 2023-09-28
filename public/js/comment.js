@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } 
 
             comment.innerHTML = `
-                <form id="comment-${c.id}" action="" class="comment-wrapper mt-4" method="post">
+                <form data-comment="${c.id}" action="/comment/update/${c.id}" class="comment-wrapper mt-4" method="post">
                 <input type="hidden" name="_method" value="put">
                 <input type="hidden" name="_token" value="${data.csrf_token}">
                 <p>
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     ${del_link}
                 </p>
 
-                <textarea name="comment-${c.id}" readonly="" class="comment mb-2 form-control auto-resize-textarea" style="height: 60px;">${c.comment}</textarea>
+                <textarea name="comment" readonly="" class="comment mb-2 form-control auto-resize-textarea" style="height: 60px;">${c.comment}</textarea>
                 ${edit_link}
                 </form>
                 <form class="comment-del del-form-${c.id}" action="/comment/delete/${c.id}" method="post">
