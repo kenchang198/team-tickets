@@ -51,6 +51,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const commentSaveBtn = commentUpdateFrom.querySelector('.comment-save');
         commentSaveBtn.style.display = 'inline-block';
         
+        const commentCancelBtn = commentUpdateFrom.querySelector('.comment-edit-cancel');
+        commentCancelBtn.style.display = 'inline-block';
+        
         event.preventDefault();
     });
 
@@ -90,6 +93,31 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     });
 
+    // コメント 編集 - キャンセルボタン
+    document.addEventListener('click', (event) => {
+        
+        if (event.target.classList.contains('comment-edit-cancel') === false) {
+            return;
+        }
+
+        const commentUpdateFrom = event.target.closest('.comment-wrapper');
+        const commentTextarea = commentUpdateFrom.querySelector('.comment');
+        
+        commentTextarea.value = commentTextarea.dataset.originalValue;
+
+        commentTextarea.readOnly = true;
+        
+        event.target.style.display = 'none';
+        
+        const commentSaveBtn = commentUpdateFrom.querySelector('.comment-save');
+        commentSaveBtn.style.display = 'none';
+        
+        const commentEditBtn = commentUpdateFrom.querySelector('.comment-edit');
+        commentEditBtn.style.display = 'inline-block';
+        
+        event.preventDefault();
+    });
+
     // コメント一覧を取得して表示する関数
     async function fetchAndDisplayComments(ticketId) {
         const response = await fetch(`/comment/${ticketId}`);
@@ -116,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (c.user.id == loginId) {
                 del_link = `<a class="del-btn-1" href="javascript:;" onclick="submitDelForm(${c.id})">削除</a>`;
                 edit_link = `<div class="text-end mb-3">
+                            <button class="comment-edit-cancel btn btn-secondary px-3" style="display:none;">キャンセル</button>
                             <button type="submit" style="display:none;" class="comment-save btn btn-primary px-3">保存</button>
                             <button class="comment-edit btn btn-secondary px-3">編集</button>
                             </div>`

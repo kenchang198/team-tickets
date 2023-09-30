@@ -91,44 +91,6 @@
 <div id="user-id" data-user-id="{{ Auth::user()->id }}"></div>
 <script src="/js/comment.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-
-        // 編集状態を解除
-        document.addEventListener('click', (event) => {
-
-            // 編集ボタン自身は解除の対象外 （編集可能状態にならないため）
-            if (event.target.classList.contains('comment-edit')) {
-                return true;
-            }
-            // textAreasを配列に変換
-            const textAreas = document.getElementsByClassName('comment');
-            const textAreaArray = Array.from(textAreas);
-
-            // クリックされた要素がテキストエリアか、テキストエリアの親要素かを確認
-            const isTextAreaOrParent = textAreaArray.some((textarea) => {
-                return textarea === event.target || textarea.contains(event.target);
-            });
-
-            // クリックされた要素がテキストエリア以外の場合、テキストエリアを読み取り専用に戻し、編集ボタンを表示する
-            if (!isTextAreaOrParent) {
-                textAreaArray.forEach((textarea) => {
-                    if (!textarea.readOnly) {
-                        const parentForm = textarea.closest('.comment-wrapper');
-                        const commentEditBtn = parentForm.querySelector('.comment-edit');
-                        const commentSaveBtn = parentForm.querySelector('.comment-save');
-                        
-                        // 編集をキャンセルして元の値に戻す
-                        textarea.value = textarea.dataset.originalValue;
-                        
-                        textarea.readOnly = true;
-                        commentEditBtn.style.display = 'inline-block';
-                        commentSaveBtn.style.display = 'none';
-                    }
-                });
-            }
-        });
-
-    });
 
     document.addEventListener('DOMContentLoaded', () => {
         const editLinks = document.querySelectorAll('.edit');
