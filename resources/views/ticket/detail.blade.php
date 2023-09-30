@@ -92,21 +92,6 @@
 <script src="/js/comment.js"></script>
 <script>
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const editLinks = document.querySelectorAll('.edit');
-
-        editLinks.forEach(link => {
-            link.addEventListener('click', (event) => {
-                event.preventDefault(); // デフォルトのリンク動作をキャンセル
-            });
-        });
-    });
-
-    window.onload = function() {
-        // エラーがあればスクロール
-        scrollToError();
-    };
-
     // クラスcomment-delの要素を取得
     const commentDel = document.querySelectorAll('.comment-del');
     
@@ -129,42 +114,6 @@
         }).catch(error => {
             console.log(error);
         });
-    }
-
-    function scrollToError() {
-        // エラーメッセージが含まれる要素を取得
-        var errorElements = document.getElementsByClassName('_error-msg');
-        
-        if (errorElements.length > 0) {
-            // 最初のエラーメッセージが含まれる要素を取得
-            var firstErrorElement = errorElements[0];
-            
-            // 親要素を取得
-            var parentElement = firstErrorElement.parentElement;
-
-            // 親要素があればスクロール
-            if (parentElement) {
-                // 親要素までの位置を取得
-                var parentPosition = getElementPosition(parentElement);
-
-                // スクロール位置を調整（例えば、エラーメッセージの上部が見えるようにスクロール）
-                var scrollOffset = parentPosition - 50;
-
-                // スクロール実行
-                window.scrollTo({
-                    top: scrollOffset,
-                    behavior: 'smooth' // スムーズスクロールするためにsmoothを指定
-                });
-            }
-        }
-    }
-
-    // 要素の絶対位置を取得する関数
-    function getElementPosition(element) {
-        var rect = element.getBoundingClientRect();
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-        return rect.top + scrollTop;
     }
 
     function autoResizeTextarea(textarea) {
