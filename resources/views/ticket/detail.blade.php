@@ -92,65 +92,6 @@
 <script src="/js/comment.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // コメント 編集ボタン
-        document.addEventListener('click', (event) => {
-
-            if (event.target.classList.contains('comment-edit')) {
-                
-                const commentUpdateFrom = event.target.closest('.comment-wrapper');
-                
-                const commentTextarea = commentUpdateFrom.querySelector('.comment');
-                
-                commentTextarea.dataset.originalValue = commentTextarea.value;
-                commentTextarea.readOnly = false;
-                
-                event.target.style.display = 'none';
-                
-                const commentSaveBtn = commentUpdateFrom.querySelector('.comment-save');
-                commentSaveBtn.style.display = 'inline-block';
-
-                
-                
-                event.preventDefault();
-            }
-        });
-
-        // コメント 保存ボタン
-        document.addEventListener('click', (event) => {
-
-            if (event.target.classList.contains('comment-save')) {
-                
-                const commentUpdateFrom = event.target.closest('.comment-wrapper');
-                const commentTextarea = commentUpdateFrom.querySelector('.comment');
-                const commentId = commentUpdateFrom.dataset.comment;
-                
-                const formData = new FormData(commentUpdateFrom);
-                
-                event.preventDefault();
-                
-                fetch(commentUpdateFrom.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': formData.get('_token'),
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-                
-                commentTextarea.readOnly = true;
-
-                event.target.style.display = 'none';
-
-                const commentEditBtn = commentUpdateFrom.querySelector('.comment-edit');
-                commentEditBtn.style.display = 'inline-block';
-            }
-        });
 
         // 編集状態を解除
         document.addEventListener('click', (event) => {

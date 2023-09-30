@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const ticketId = urlParts[urlParts.length - 1];
     fetchAndDisplayComments(ticketId);
 
+    // コメント 新規投稿
     commentForm.addEventListener('submit', function (e) {
         e.preventDefault();
         
@@ -24,6 +25,64 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.success) {
                 commentTextArea.value = '';
+                fetchAndDisplayComments(ticketId);
+            } else {
+                alert(data.errors.comment[0]);
+            }
+        })
+    });
+
+    // コメント 編集ボタン
+    document.addEventListener('click', (event) => {
+        
+        if (event.target.classList.contains('comment-edit') === false) {
+            return;
+        }
+
+        const commentUpdateFrom = event.target.closest('.comment-wrapper');
+            
+        const commentTextarea = commentUpdateFrom.querySelector('.comment');
+        
+        commentTextarea.dataset.originalValue = commentTextarea.value;
+        commentTextarea.readOnly = false;
+        
+        event.target.style.display = 'none';
+        
+        const commentSaveBtn = commentUpdateFrom.querySelector('.comment-save');
+        commentSaveBtn.style.display = 'inline-block';
+        
+        event.preventDefault();
+    });
+
+    // コメント 編集 - 保存ボタン
+    document.addEventListener('click', (event) => {
+        
+        if (event.target.classList.contains('comment-save') === false) {
+            return;
+        }
+
+        const commentUpdateFrom = event.target.closest('.comment-wrapper');
+        const commentTextarea = commentUpdateFrom.querySelector('.comment');
+        
+        const formData = new FormData(commentUpdateFrom);
+        
+        event.preventDefault();
+        
+        fetch(commentUpdateFrom.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': formData.get('_token'),
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                commentTextarea.readOnly = true;
+                event.target.style.display = 'none';
+                const commentEditBtn = commentUpdateFrom.querySelector('.comment-edit');
+                commentEditBtn.style.display = 'inline-block';
+
                 fetchAndDisplayComments(ticketId);
             } else {
                 alert(data.errors.comment[0]);
