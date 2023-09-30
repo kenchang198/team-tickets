@@ -37,7 +37,7 @@ class CommentController extends Controller
     {
         $data = $request->validated();
         
-        $comment = Comment::create(
+        Comment::create(
             [
                 'ticket_id' => $ticket->id,
                 'user_id' => Auth::user()->id,
@@ -48,12 +48,6 @@ class CommentController extends Controller
         return response()->json(
             [
                 'success' => true,
-                'username' => Auth::user()->name,
-                'created_at' => $comment->createdAt(),
-                'id' => $comment->id,
-                'update_url' => route('comment.update', $comment),
-                'delete_url' => route('comment.delete', $comment),
-                'csrf_token' => csrf_token(),
             ]
         );
     }

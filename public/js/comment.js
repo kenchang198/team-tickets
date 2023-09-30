@@ -26,12 +26,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 commentTextArea.value = '';
                 fetchAndDisplayComments(ticketId);
             } else {
-                alert('コメントの投稿に失敗しました');
+                alert(data.errors.comment[0]);
             }
         })
-        .catch(error => {
-            console.error('エラーが発生しました:', error);
-        });
     });
 
     // コメント一覧を取得して表示する関数
