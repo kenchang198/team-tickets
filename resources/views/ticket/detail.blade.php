@@ -91,31 +91,6 @@
 <div id="user-id" data-user-id="{{ Auth::user()->id }}"></div>
 <script src="/js/comment.js"></script>
 <script>
-
-    // クラスcomment-delの要素を取得
-    const commentDel = document.querySelectorAll('.comment-del');
-    
-    // コメント削除
-    function submitDelForm(commentId) {
-        if (!window.confirm('コメントを削除します。よろしいですか？')) {
-            return false;
-        }
-        
-        const form = document.querySelector('.del-form-' + commentId);
-        fetch(form.action, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value
-            },
-        }).then(response => {
-            if (response.ok) {
-                form.parentElement.remove();
-            }
-        }).catch(error => {
-            console.log(error);
-        });
-    }
-
     function autoResizeTextarea(textarea) {
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 'px';
