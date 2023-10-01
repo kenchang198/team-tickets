@@ -54,13 +54,6 @@
 
     <form class="comment-add-wrapper" action="{{ route('comment.store', [$project, $ticket]) }}" method="post">
         @csrf
-        @error('comment')
-        <div class="alert alert-danger">
-            <ul>
-                <li class="_error-msg">{{ $message }}</li>
-            </ul>
-        </div>
-        @enderror
         <p>コメントを追加</p>
         <textarea class="comment mb-2 form-control auto-resize-textarea" name="comment" id="" cols="20" rows="3">{{ old('comment') }}</textarea>
         <div class="mb-3 text-end">
