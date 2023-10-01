@@ -49,7 +49,9 @@
             <p >更新日: {{ $updated_at }}　{{ $ticket->updateUser->name }}</p>
         </div>
     </div>
-
+    <div id="app">
+        <h1>apppp</h1>
+    </div>
     <div class="mt-5 comments"></div>
 
     <form class="comment-add-wrapper" action="{{ route('comment.store', [$project, $ticket]) }}" method="post">
@@ -83,6 +85,7 @@
 </div>
 <div id="user-id" data-user-id="{{ Auth::user()->id }}"></div>
 <script src="/js/comment.js"></script>
+<script src="{{ mix('js/app.js') }}"></script>
 <script>
     function autoResizeTextarea(textarea) {
         textarea.style.height = 'auto';
