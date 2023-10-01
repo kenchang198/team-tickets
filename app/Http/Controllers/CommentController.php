@@ -12,6 +12,21 @@ use App\Models\Ticket;
 
 class CommentController extends Controller
 {
+    
+    // コメント一覧を取得するAPI
+    public function index(Ticket $ticket)
+    {
+        $comments = $ticket->comments->load('user');
+        
+        return response()->json(
+            [
+                'success' => true,
+                'comments' => $comments,
+                'csrf_token' => csrf_token(),
+            ]
+        );
+    }
+
     /**
      * @param \App\Http\Requests\Comment\StoreRequest $request
      * @param \App\Models\Project $project
@@ -22,7 +37,7 @@ class CommentController extends Controller
     {
         $data = $request->validated();
         
-        $comment = Comment::create(
+        Comment::create(
             [
                 'ticket_id' => $ticket->id,
                 'user_id' => Auth::user()->id,
@@ -33,40 +48,26 @@ class CommentController extends Controller
         return response()->json(
             [
                 'success' => true,
-                'username' => Auth::user()->name,
-                'created_at' => $comment->createdAt(),
-                'id' => $comment->id,
-                'update_url' => route('comment.update', $comment),
-                'delete_url' => route('comment.delete', $comment),
-                'csrf_token' => csrf_token(),
             ]
         );
     }
     
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Comment\StoreRequest $request
      * @param \App\Models\Comment $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(StoreRequest $request, Comment $comment)
     {
-        $id = $comment->id;
+        $data = $request->validated();
         
-        $data = $request->validate(
+        $comment->__update($data["comment"]);
+        
+        return response()->json(
             [
-                'comment-' . $id => 'required|string|max:1000',
-            ],
-            [
-                'comment-' . $id . '.required' => 'コメントを入力してください。',
-                'comment-' . $id . '.max' => 'コメントは、:max文字以下で入力してください。',
+                'success' => true,
             ]
         );
-
-        $comment->__update($data["comment-$id"]);
-        
-        $redirectUrl = URL::previous() . "#comment-$id";
-        
-        return redirect($redirectUrl);
     }
 
     /**
@@ -77,6 +78,10 @@ class CommentController extends Controller
     {
         $comment->delete();
         
-        return redirect()->back();
+        return response()->json(
+            [
+                'success' => true
+            ]
+        );
     }
 }

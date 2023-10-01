@@ -49,62 +49,11 @@
             <p >更新日: {{ $updated_at }}　{{ $ticket->updateUser->name }}</p>
         </div>
     </div>
-    <div class="mt-5 comments">
-        <p class="mb-3"><b>コメント</b></p>
-        @foreach ($ticket->comments as $comment)
-        <div>
-        <form id="comment-{{$comment->id}}" action="{{ route('comment.update', $comment) }}" class="comment-wrapper mt-4 @if($loop->last) border-none @endif" method="post">
-            @method('put')
-            @csrf
-            @error("comment-{$comment->id}")
-            <div class="alert alert-danger">
-                <ul>
-                    <li class="_error-msg"><?= preg_replace('/comment-\d+/', '${1}コメント', $message); ?></li>
-                </ul>
-            </div>
-            @enderror
-            
-            <p>
-                @if (!$comment->user->del_flg)
-                <span>{{ $comment->user->name }}</span>
-                @else
-                <span class="text-decoration-line-through">{{ $comment->user->name }}</span>
-                @endif
-                <span class="text-black-50 ps-3">{{ $comment->createdAt() }}</span>
-                @if ($comment->user->id == Auth::user()->id)
-                <a class="del-btn-{{$comment->id}}" href="javascript:;" onclick="submitDelForm({{$comment->id}})">削除</a>
-                @endif
-            </p>
 
-            @if (old("comment-{$comment->id}"))
-            <textarea name="comment-{{ $comment->id }}" readonly class="comment mb-2 form-control auto-resize-textarea">{{ old("comment-{$comment->id}") }}</textarea>
-            @else
-            <textarea name="comment-{{ $comment->id }}" readonly class="comment mb-2 form-control auto-resize-textarea">{{$comment->comment}}</textarea>
-            @endif
-            @if ($comment->user_id == Auth::user()->id)
-            <div class="text-end mb-3">
-                <button type="submit" style="display:none;" class="comment-save btn btn-primary px-3">保存</button>
-                <button class="comment-edit btn btn-secondary px-3">編集</button>
-            </div>
-            @endif
-        </form>
-        <form class="del-form-{{$comment->id}}" action="{{ route('comment.delete', $comment) }}" method="post">
-            @method('delete')
-            @csrf
-        </form>
-        </div>
-        @endforeach
-    </div>
+    <div class="mt-5 comments"></div>
 
     <form class="comment-add-wrapper" action="{{ route('comment.store', [$project, $ticket]) }}" method="post">
         @csrf
-        @error('comment')
-        <div class="alert alert-danger">
-            <ul>
-                <li class="_error-msg">{{ $message }}</li>
-            </ul>
-        </div>
-        @enderror
         <p>コメントを追加</p>
         <textarea class="comment mb-2 form-control auto-resize-textarea" name="comment" id="" cols="20" rows="3">{{ old('comment') }}</textarea>
         <div class="mb-3 text-end">
@@ -132,147 +81,9 @@
         <a class="btn btn-secondary px-3" href="{{ route('project.detail', $project) }}">戻る</a>
     </div>
 </div>
+<div id="user-id" data-user-id="{{ Auth::user()->id }}"></div>
 <script src="/js/comment.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-
-        const commentEditBtns = document.querySelectorAll('.comment-edit');
-        const commentSaveBtns= document.querySelectorAll('.comment-save');
-        const textAreas = document.getElementsByClassName('comment');
-
-        // コメント 編集ボタン
-        commentEditBtns.forEach((editBtn) => {
-            editBtn.addEventListener('click', (event) => {
-                
-                const parentWrapper = editBtn.closest('.comment-wrapper');
-                const commentTextarea = parentWrapper.querySelector('.comment');
-
-                // 編集開始時に元の値を保持する
-                commentTextarea.dataset.originalValue = commentTextarea.value;
-
-                commentTextarea.readOnly = false;
-
-                editBtn.style.display = 'none';
-
-                const commentSaveBtn = parentWrapper.querySelector('.comment-save');
-                commentSaveBtn.style.display = 'inline-block';
-
-                event.preventDefault();
-            });
-        });
-
-        // コメント　保存ボタン
-        commentSaveBtns.forEach((saveBtn) => {
-            saveBtn.addEventListener('click', () => {
-                
-                const parentWrapper = saveBtn.closest('.comment-wrapper');
-                const commentTextarea = parentWrapper.querySelector('.comment');
-                commentTextarea.readOnly = true;
-
-                saveBtn.style.display = 'none';
-
-                const commentEditBtn = parentWrapper.querySelector('.comment-edit');
-                commentEditBtn.style.display = 'inline-block';
-
-            });
-        });
-
-        // 編集状態を解除
-        document.addEventListener('click', (event) => {
-
-            // 編集ボタン自身は解除の対象外 （編集可能状態にならないため）
-            if (event.target.classList.contains('comment-edit')) {
-                return true;
-            }
-            // textAreasを配列に変換
-            const textAreaArray = Array.from(textAreas);
-
-            // クリックされた要素がテキストエリアか、テキストエリアの親要素かを確認
-            const isTextAreaOrParent = textAreaArray.some((textarea) => {
-                return textarea === event.target || textarea.contains(event.target);
-            });
-
-            // クリックされた要素がテキストエリア以外の場合、テキストエリアを読み取り専用に戻し、編集ボタンを表示する
-            if (!isTextAreaOrParent) {
-                textAreaArray.forEach((textarea) => {
-                    if (!textarea.readOnly) {
-                        const parentForm = textarea.closest('.comment-wrapper');
-                        const commentEditBtn = parentForm.querySelector('.comment-edit');
-                        const commentSaveBtn = parentForm.querySelector('.comment-save');
-                        
-                        // 編集をキャンセルして元の値に戻す
-                        textarea.value = textarea.dataset.originalValue;
-                        
-                        textarea.readOnly = true;
-                        commentEditBtn.style.display = 'inline-block';
-                        commentSaveBtn.style.display = 'none';
-                    }
-                });
-            }
-        });
-
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const editLinks = document.querySelectorAll('.edit');
-
-        editLinks.forEach(link => {
-            link.addEventListener('click', (event) => {
-                event.preventDefault(); // デフォルトのリンク動作をキャンセル
-            });
-        });
-    });
-
-    window.onload = function() {
-        // エラーがあればスクロール
-        scrollToError();
-    };
-
-    // コメント削除
-    function submitDelForm(commentId) {
-        const form = document.querySelector('.del-form-' + commentId);
-
-        if (form) {
-            form.submit();
-        }
-    }
-
-    function scrollToError() {
-        // エラーメッセージが含まれる要素を取得
-        var errorElements = document.getElementsByClassName('_error-msg');
-        
-        if (errorElements.length > 0) {
-            // 最初のエラーメッセージが含まれる要素を取得
-            var firstErrorElement = errorElements[0];
-            
-            // 親要素を取得
-            var parentElement = firstErrorElement.parentElement;
-
-            // 親要素があればスクロール
-            if (parentElement) {
-                // 親要素までの位置を取得
-                var parentPosition = getElementPosition(parentElement);
-
-                // スクロール位置を調整（例えば、エラーメッセージの上部が見えるようにスクロール）
-                var scrollOffset = parentPosition - 50;
-
-                // スクロール実行
-                window.scrollTo({
-                    top: scrollOffset,
-                    behavior: 'smooth' // スムーズスクロールするためにsmoothを指定
-                });
-            }
-        }
-    }
-
-    // 要素の絶対位置を取得する関数
-    function getElementPosition(element) {
-        var rect = element.getBoundingClientRect();
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-        return rect.top + scrollTop;
-    }
-
     function autoResizeTextarea(textarea) {
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 'px';

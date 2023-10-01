@@ -9,11 +9,16 @@ use Illuminate\Support\Facades\Auth;
 class Comment extends Model
 {
     use HasFactory;
+    use SerializeDate;
     
     protected $fillable = [
         'ticket_id',
         'user_id',
         'comment'
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime:Y/m/d H:i',
     ];
 
     public function createdAt()

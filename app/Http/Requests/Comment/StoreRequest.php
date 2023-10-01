@@ -5,6 +5,9 @@ namespace App\Http\Requests\Comment;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+use Illuminate\contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
 class StoreRequest extends FormRequest
 {
     /**
@@ -36,5 +39,23 @@ class StoreRequest extends FormRequest
         return [
             'comment.required' => 'コメントを入力してください。',
         ];
+    }
+
+    /**
+     * (Override) エラー時にJSONレスポンスする
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function failedValidation(Validator $validator): void
+    {
+        $data = [
+            'errors' => $validator->errors()
+        ];
+
+        throw new HttpResponseException(response()->json($data, 422));
     }
 }
