@@ -13,14 +13,14 @@ class CommentsTableSeeder extends Seeder
         $commentsData = [
             [
                 'ticket_id' => 1,  // 対応するチケットのID
-                'user_id' => 1,  // ユーザID
+                'user_id' => 2,  // ユーザID
                 'comment' => 'この新機能の優先度はどれくらいですか？',
                 'created_at' => now()->subMinutes(30),  // 過去のコメント
                 'updated_at' => null,
             ],
             [
                 'ticket_id' => 1,  // 対応するチケットのID
-                'user_id' => 2,  // ユーザID
+                'user_id' => 1,  // ユーザID
                 'comment' => '優先度は高いです。ユーザの要望が多い機能ですので、できるだけ早く進めましょう。',
                 'created_at' => now()->subMinutes(20),  // 過去のコメント
                 'updated_at' => null,
