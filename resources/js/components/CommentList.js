@@ -1,35 +1,7 @@
 // コメント一覧のコンポーネント
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-import { useState } from 'react';
-import { useEffect } from 'react';
-
-const currentUrl = window.location.href;
-const urlParts = currentUrl.split('/');
-const ticketId = urlParts[urlParts.length - 1];
-
-const loginId = document.getElementById('user-id').getAttribute('data-user-id');
-
-function CommentList() {
-    const [comments, setComments] = useState([]);
-    const [csrfToken, setCsrfToken] = useState(''); // CSRFトークンの状態を保持
-
-    useEffect(() => {
-        // コメント一覧を取得する関数
-        async function fetchComments() {
-            const response = await fetch(`/comment/${ticketId}`);
-            
-            const data = await response.json();
-            
-            setComments(data.comments);
-            
-            // CSRFトークンを状態にセット
-            setCsrfToken(data.csrf_token);
-        }
-
-        fetchComments();
-    }, [ticketId]);
+function CommentList({comments, csrfToken ,loginId}) {
 
     return (
         <div className="mt-5 comments">
@@ -79,7 +51,3 @@ function CommentList() {
 }
 
 export default CommentList;
-
-if (document.getElementById('app')) {
-    ReactDOM.render(<CommentList />, document.getElementById('app'));
-}

@@ -1,5 +1,4 @@
 <x-layout>
-
 <div class="container-fluid">
     <nav class="my-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -51,14 +50,6 @@
     </div>
     <div id="app"></div>
 
-    <form class="comment-add-wrapper" action="{{ route('comment.store', [$project, $ticket]) }}" method="post">
-        @csrf
-        <p>コメントを追加</p>
-        <textarea class="comment mb-2 form-control auto-resize-textarea" name="comment" id="" cols="20" rows="3">{{ old('comment') }}</textarea>
-        <div class="mb-3 text-end">
-            <button class="btn btn-primary px-3" type="submit">追加</button>
-        </div>
-    </form>
     <div class="mb-5">
             <p>要確認 : </p>
             <ul>
@@ -103,5 +94,7 @@
         autoResizeTextarea(textarea);
         });
     });
+
+    
 </script>
 </x-layout>
