@@ -5447,19 +5447,20 @@ function App() {
     fetchComments(ticketId, setComments, setCsrfToken);
   }, [ticketId]);
 
-  // // コメント投稿成功時にコメント一覧を再取得するコールバック
-  var handleCommentPosted = function handleCommentPosted() {
+  // コメント操作(投稿、編集、削除)成功時にコメント一覧を再取得するコールバック
+  var handleCommentAction = function handleCommentAction() {
     fetchComments(ticketId, setComments, csrfToken);
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_CommentList__WEBPACK_IMPORTED_MODULE_2__["default"], {
       comments: comments,
       csrfToken: csrfToken,
-      loginId: loginId
+      loginId: loginId,
+      onCommentAction: handleCommentAction
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_CommentForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
       csrfToken: csrfToken,
       ticketId: ticketId,
-      onCommentPosted: handleCommentPosted
+      onCommentAction: handleCommentAction
     })]
   });
 }
@@ -5467,6 +5468,38 @@ function App() {
 if (document.getElementById('app')) {
   react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(App, {}), document.getElementById('app'));
 }
+
+/***/ }),
+
+/***/ "./resources/js/components/CommentDelete.js":
+/*!**************************************************!*\
+  !*** ./resources/js/components/CommentDelete.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+// コメント削除
+function submitDelForm(commentId, onCommentAction) {
+  if (!window.confirm('コメントを削除します。よろしいですか？')) {
+    return false;
+  }
+  var form = document.querySelector('.del-form-' + commentId);
+  fetch(form.action, {
+    method: 'DELETE',
+    headers: {
+      'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value
+    }
+  }).then(function (response) {
+    if (response.ok) {
+      onCommentAction();
+    }
+  });
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (submitDelForm);
 
 /***/ }),
 
@@ -5499,7 +5532,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function CommentForm(_ref) {
   var csrfToken = _ref.csrfToken,
     ticketId = _ref.ticketId,
-    onCommentPosted = _ref.onCommentPosted;
+    onCommentAction = _ref.onCommentAction;
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState2 = _slicedToArray(_useState, 2),
     commentText = _useState2[0],
@@ -5531,7 +5564,7 @@ function CommentForm(_ref) {
             data = _context.sent;
             if (data.success) {
               setCommentText('');
-              onCommentPosted();
+              onCommentAction();
             } else {
               alert(data.errors.comment[0]);
             }
@@ -5588,49 +5621,52 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _CommentDelete__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CommentDelete */ "./resources/js/components/CommentDelete.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 // コメント一覧のコンポーネント
+
 
 
 
 function CommentList(_ref) {
   var comments = _ref.comments,
     csrfToken = _ref.csrfToken,
-    loginId = _ref.loginId;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    loginId = _ref.loginId,
+    onCommentAction = _ref.onCommentAction;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
     className: "mt-5 comments",
     children: comments.map(function (comment) {
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("form", {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("form", {
           action: "/comment/update/".concat(comment.id),
           className: "comment-wrapper mt-4",
           method: "post",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
             type: "hidden",
             name: "_method",
             value: "put"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
             type: "hidden",
             name: "_token",
             value: csrfToken
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("p", {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("p", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
               children: comment.user.name
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
               className: "text-black-50 ps-3",
               children: comment.created_at
             }), comment.user.id == loginId &&
             /*#__PURE__*/
             // if
-            (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("a", {
+            (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
               className: "del-btn-1 px-2",
               href: "javascript:;",
               onClick: function onClick() {
-                return submitDelForm(comment.id);
+                return (0,_CommentDelete__WEBPACK_IMPORTED_MODULE_1__["default"])(comment.id, onCommentAction);
               },
               children: "\u524A\u9664"
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("textarea", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("textarea", {
             name: "comment",
             readOnly: true,
             className: "comment mb-2 form-control auto-resize-textarea",
@@ -5641,35 +5677,35 @@ function CommentList(_ref) {
           }), comment.user.id == loginId &&
           /*#__PURE__*/
           // if
-          (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+          (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
             className: "text-end mb-3",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
               className: "comment-edit-cancel btn btn-secondary px-3",
               style: {
                 display: 'none'
               },
               children: "\u30AD\u30E3\u30F3\u30BB\u30EB"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
               type: "submit",
               style: {
                 display: 'none'
               },
               className: "comment-save btn btn-primary px-3",
               children: "\u4FDD\u5B58"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
               className: "comment-edit btn btn-secondary px-3",
               children: "\u7DE8\u96C6"
             })]
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("form", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("form", {
           className: "comment-del del-form-".concat(comment.id),
           action: "/comment/delete/".concat(comment.id),
           method: "post",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
             type: "hidden",
             name: "_method",
             value: "delete"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
             type: "hidden",
             name: "_token",
             value: csrfToken

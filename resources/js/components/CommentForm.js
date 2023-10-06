@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function CommentForm({ csrfToken, ticketId, onCommentPosted }) {
+function CommentForm({ csrfToken, ticketId, onCommentAction }) {
     const [commentText, setCommentText] = useState('');
     const [error, setError] = useState('');
 
@@ -20,7 +20,7 @@ function CommentForm({ csrfToken, ticketId, onCommentPosted }) {
 
         if (data.success) {
             setCommentText('');
-            onCommentPosted();
+            onCommentAction();
         } else {
             alert(data.errors.comment[0]);
         }

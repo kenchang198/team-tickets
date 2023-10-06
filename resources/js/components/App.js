@@ -31,15 +31,15 @@ function App() {
         fetchComments(ticketId, setComments, setCsrfToken);
     }, [ticketId]);
 
-    // // コメント投稿成功時にコメント一覧を再取得するコールバック
-    const handleCommentPosted = () => {
+    // コメント操作(投稿、編集、削除)成功時にコメント一覧を再取得するコールバック
+    const handleCommentAction = () => {
         fetchComments(ticketId, setComments, csrfToken);
     };
 
     return (
         <>
-            <CommentList comments={comments} csrfToken={csrfToken} loginId={loginId}/>
-            <CommentForm csrfToken={csrfToken} ticketId={ticketId} onCommentPosted={handleCommentPosted} />
+            <CommentList comments={comments} csrfToken={csrfToken} loginId={loginId} onCommentAction={handleCommentAction} />
+            <CommentForm csrfToken={csrfToken} ticketId={ticketId} onCommentAction={handleCommentAction} />
         </>
     );
 }

@@ -1,7 +1,8 @@
 // コメント一覧のコンポーネント
 import React from 'react';
+import submitDelForm from './CommentDelete';
 
-function CommentList({comments, csrfToken ,loginId}) {
+function CommentList({comments, csrfToken ,loginId, onCommentAction}) {
 
     return (
         <div className="mt-5 comments">
@@ -18,7 +19,7 @@ function CommentList({comments, csrfToken ,loginId}) {
                             <span>{comment.user.name}</span>
                             <span className="text-black-50 ps-3">{comment.created_at}</span>
                             {comment.user.id == loginId && ( // if
-                                <a className="del-btn-1 px-2" href="javascript:;" onClick={() => submitDelForm(comment.id)} >削除</a>
+                                <a className="del-btn-1 px-2" href="javascript:;" onClick={() => submitDelForm(comment.id, onCommentAction)} >削除</a>
                             )}
                         </p>
                         <textarea
