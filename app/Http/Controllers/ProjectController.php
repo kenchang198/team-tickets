@@ -48,25 +48,25 @@ class ProjectController extends Controller
      * プロジェクト詳細画面
      * チケットの一覧を表示する
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Project $project
+     * @param int $projectId
      * @return \Illuminate\Http\Response
      */
-    public function detail(Request $request, Project $project)
+    public function detail(Request $request, $projectId)
     {
+        $project = Project::with('tickets.responsiblePerson')->find($projectId);
+
         $this->authorize('view', $project);
         
         $t_status = $request->input('t-status');
-        
         $responsible = $request->input('responsible');
 
-        $tickets = $project->tickets()
+        $tickets = $project->tickets
             ->when(!empty($t_status) && $t_status !== "all" , function($q) use($t_status) {
                 return $q->where('status_code', $t_status);
             })
             ->when(!empty($responsible) && $responsible !== "all" , function($q) use($responsible) {
                 return $q->where('responsible_person_id', $responsible);
-            })
-            ->get();
+            });
 
         $statuses = Status::select('status_code', 'status_name')
             ->pluck('status_name', 'status_code');
